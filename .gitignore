@@ -1,0 +1,10 @@
+__pycache__/
+*.py[cod]
+*$py.class
+.pytest_cache/
+*.log
+yolov10s.pt
+models/*.pt
+models/*.onnx
+.vscode/
+.idea/
