@@ -7,7 +7,7 @@ S_t = w_c*C_t + w_d*S_disp + w_a*S_area + w_ar*S_aspect + w_p*S_pers
 import math
 from typing import List, Optional
 
-from airos.config.settings import BSIConfig
+from config.settings import BSIConfig
 from airos.detector.hand_detector import HandDetection
 from airos.logger.airos_logger import get_logger
 from airos.tracking.hand_tracker import TrackedHand
@@ -36,14 +36,14 @@ class BoundingBoxStabilityIndex:
         # 1. Detection Confidence Component (C_t)
         c_score = max(0.0, min(1.0, current_det.confidence))
 
-        if tracked_hand is None or len(tracked_hand.history) < 2:
+        if tracked_hand is None or len(tracked_hand.history) == 0:
             # First detection has default partial stability
             s_disp = 1.0
             s_area = 1.0
             s_aspect = 1.0
             s_pers = 1.0 / float(self.config.persistence_required_frames)
         else:
-            prev_det = tracked_hand.history[-2]
+            prev_det = tracked_hand.history[-1]
 
             # 2. Centroid Displacement Stability (S_disp)
             disp = math.hypot(

@@ -4,7 +4,7 @@ Unit Tests for OS Controller (Dry Run Mode)
 
 import pytest
 
-from airos.config.settings import ControllerConfig
+from config.settings import ControllerConfig
 from airos.controller.os_controller import OSController
 from airos.gesture.gesture_interpreter import GestureAction, GestureType
 

@@ -10,7 +10,7 @@ from typing import Dict, List, Optional, Tuple
 
 import numpy as np
 
-from airos.config.settings import DetectorConfig
+from config.settings import DetectorConfig
 from airos.detector.hand_detector import HandDetection
 from airos.logger.airos_logger import get_logger
 

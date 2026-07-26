@@ -9,7 +9,7 @@ from typing import List, Optional, Tuple
 
 import numpy as np
 
-from airos.config.settings import DetectorConfig, ModelConfig
+from config.settings import DetectorConfig, ModelConfig
 from airos.logger.airos_logger import get_logger
 from airos.models.model_loader import BaseDetectorEngine, YOLOv10ModelLoader
 

@@ -8,7 +8,7 @@ from typing import List, Optional, Tuple
 import cv2
 import numpy as np
 
-from airos.config.settings import HUDConfig
+from config.settings import HUDConfig
 from airos.detector.hand_detector import HandDetection
 from airos.gesture.gesture_interpreter import GestureAction
 from airos.utilities.metrics import PerformanceMetrics

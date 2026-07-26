@@ -7,7 +7,7 @@ import math
 import time
 from typing import Dict, Optional, Tuple
 
-from airos.config.settings import ICVConfig
+from config.settings import ICVConfig
 from airos.detector.hand_detector import HandDetection
 from airos.logger.airos_logger import get_logger
 from airos.tracking.hand_tracker import TrackedHand

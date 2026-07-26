@@ -1,0 +1,12 @@
+{
+  "num_frames_evaluated": 300,
+  "total_duration_sec": 11.63,
+  "mean_fps": 25.93,
+  "mean_latency_ms": 37.18,
+  "p95_latency_ms": 39.18,
+  "mean_cpu_percent": 27.03,
+  "mean_ram_percent": 1.84,
+  "mean_bsi_score": 0.973,
+  "jitter_variance_px2": 5.1703,
+  "clicks_verified": 0
+}

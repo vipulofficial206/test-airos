@@ -8,7 +8,7 @@ Low velocity  -> Low alpha (High smoothing, jitter cancellation)
 import math
 from typing import Optional, Tuple
 
-from airos.config.settings import AMSConfig
+from config.settings import AMSConfig
 from airos.logger.airos_logger import get_logger
 
 logger = get_logger()

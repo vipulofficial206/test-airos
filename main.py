@@ -12,7 +12,7 @@ import cv2
 from airos.algorithms.ams import AdaptiveMotionSmoothing
 from airos.algorithms.bsi import BoundingBoxStabilityIndex
 from airos.algorithms.icv import IntentBasedClickVerification
-from airos.config.settings import load_config
+from config.settings import load_config
 from airos.controller.os_controller import OSController
 from airos.detector.hand_detector import HandDetector
 from airos.gesture.gesture_interpreter import GestureInterpreter

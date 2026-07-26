@@ -5,7 +5,7 @@ Unit Tests for Gesture Interpreter
 import pytest
 
 from airos.algorithms.icv import IntentBasedClickVerification
-from airos.config.settings import GestureConfig, ICVConfig
+from config.settings import GestureConfig, ICVConfig
 from airos.detector.hand_detector import HandDetection
 from airos.gesture.gesture_interpreter import GestureInterpreter, GestureType
 from airos.tracking.hand_tracker import HandTracker, DetectorConfig

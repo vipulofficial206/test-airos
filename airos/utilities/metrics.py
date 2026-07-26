@@ -6,7 +6,7 @@ Tracks FPS, End-to-End Latency, CPU Usage, RAM Usage, and Cursor Jitter Variance
 from collections import deque
 from dataclasses import dataclass, field
 import time
-from typing import Deque, Tuple
+from typing import Deque, Optional, Tuple
 
 import numpy as np
 import psutil

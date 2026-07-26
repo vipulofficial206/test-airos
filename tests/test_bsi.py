@@ -6,7 +6,7 @@ import time
 import pytest
 
 from airos.algorithms.bsi import BoundingBoxStabilityIndex
-from airos.config.settings import BSIConfig
+from config.settings import BSIConfig
 from airos.detector.hand_detector import HandDetection
 from airos.tracking.hand_tracker import TrackedHand
 

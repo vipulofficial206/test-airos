@@ -9,7 +9,7 @@ import time
 from typing import List, Optional, Tuple
 
 from airos.algorithms.icv import IntentBasedClickVerification
-from airos.config.settings import GestureConfig
+from config.settings import GestureConfig
 from airos.detector.hand_detector import HandDetection
 from airos.detector.spatial_features import SpatialFeatureExtractor, SpatialFeatures
 from airos.logger.airos_logger import get_logger

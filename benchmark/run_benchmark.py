@@ -3,9 +3,14 @@ Automated Benchmarking Suite for AirOS++
 Evaluates FPS, End-to-End Latency, CPU Usage, RAM Footprint, Cursor Jitter Variance, and Click Verification Accuracy over N frame iterations.
 """
 
+import sys
+from pathlib import Path
+
+# Add project root to sys.path
+sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
+
 import argparse
 import json
-from pathlib import Path
 import time
 from typing import Dict, Any
 
@@ -14,11 +19,12 @@ import numpy as np
 from airos.algorithms.ams import AdaptiveMotionSmoothing
 from airos.algorithms.bsi import BoundingBoxStabilityIndex
 from airos.algorithms.icv import IntentBasedClickVerification
-from airos.config.settings import load_config
+from config.settings import load_config
 from airos.controller.os_controller import OSController
 from airos.detector.hand_detector import HandDetector
 from airos.gesture.gesture_interpreter import GestureInterpreter
 from airos.logger.airos_logger import setup_logger
+from airos.models.model_loader import SyntheticHandDetector
 from airos.tracking.hand_tracker import HandTracker
 from airos.utilities.camera import ThreadedCameraReader
 from airos.utilities.metrics import PerformanceMetricsCollector
@@ -27,7 +33,7 @@ from benchmark.benchmark_report_generator import generate_markdown_report
 logger = setup_logger(log_level="INFO")
 
 
-def run_benchmark(num_frames: int = 300, config_path: str = "config/default_config.yaml") -> Dict[str, Any]:
+def run_benchmark(num_frames: int = 300, config_path: str = "config/default_config.yaml", use_yolo: bool = False) -> Dict[str, Any]:
     """Runs automated benchmark simulation and records quantitative metrics."""
     logger.info(f"Starting AirOS++ Benchmark Suite across {num_frames} frames...")
 
@@ -35,6 +41,10 @@ def run_benchmark(num_frames: int = 300, config_path: str = "config/default_conf
     config.controller.dry_run = True  # Ensure dry-run during benchmarks
 
     detector = HandDetector(config.model, config.detector)
+    if not use_yolo:
+        logger.info("Using SyntheticHandDetector engine for benchmark algorithmic evaluation.")
+        detector.engine = SyntheticHandDetector(640, 480)
+
     tracker = HandTracker(config.detector)
     ams = AdaptiveMotionSmoothing(config.algorithms.ams)
     bsi = BoundingBoxStabilityIndex(config.algorithms.bsi)
@@ -94,6 +104,8 @@ def run_benchmark(num_frames: int = 300, config_path: str = "config/default_conf
     camera.stop()
     total_bench_duration = time.time() - start_bench_time
 
+    valid_bsi_scores = [s for s in bsi_scores if not np.isnan(s)]
+
     results = {
         "num_frames_evaluated": num_frames,
         "total_duration_sec": round(total_bench_duration, 2),
@@ -102,7 +114,7 @@ def run_benchmark(num_frames: int = 300, config_path: str = "config/default_conf
         "p95_latency_ms": round(float(np.percentile(latencies, 95)), 2),
         "mean_cpu_percent": round(float(np.mean(cpu_list)), 2),
         "mean_ram_percent": round(float(np.mean(ram_list)), 2),
-        "mean_bsi_score": round(float(np.mean(bsi_scores)), 3),
+        "mean_bsi_score": round(float(np.mean(valid_bsi_scores)), 3) if valid_bsi_scores else 1.0,
         "jitter_variance_px2": round(float(np.mean(jitters)), 4),
         "clicks_verified": click_count,
     }
@@ -127,5 +139,6 @@ def run_benchmark(num_frames: int = 300, config_path: str = "config/default_conf
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Run AirOS++ Benchmark Suite")
     parser.add_argument("--frames", type=int, default=300, help="Number of benchmark frames")
+    parser.add_argument("--use-yolo", action="store_true", help="Use YOLO model engine for inference benchmarking")
     args = parser.parse_args()
-    run_benchmark(args.frames)
+    run_benchmark(args.frames, use_yolo=args.use_yolo)

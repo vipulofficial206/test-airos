@@ -10,7 +10,7 @@ from typing import Optional, Tuple
 
 import pyautogui
 
-from airos.config.settings import ControllerConfig
+from config.settings import ControllerConfig
 from airos.gesture.gesture_interpreter import GestureAction, GestureType
 from airos.logger.airos_logger import get_logger
 
@@ -38,9 +38,12 @@ class OSController:
                 from comtypes import CLSCTX_ALL
                 from pycaw.pycaw import AudioUtilities, IAudioEndpointVolume
 
-                devices = AudioUtilities.GetSpeakers()
-                interface = devices.Activate(IAudioEndpointVolume._iid_, CLSCTX_ALL, None)
-                self.volume_interface = interface.QueryInterface(IAudioEndpointVolume)
+                speakers = AudioUtilities.GetSpeakers()
+                if hasattr(speakers, "Activate"):
+                    interface = speakers.Activate(IAudioEndpointVolume._iid_, CLSCTX_ALL, None)
+                    self.volume_interface = interface.QueryInterface(IAudioEndpointVolume)
+                elif hasattr(speakers, "EndpointVolume"):
+                    self.volume_interface = speakers.EndpointVolume
                 logger.info("Successfully initialized PyCAW audio endpoint controller.")
             except Exception as e:
                 logger.warning(f"Could not initialize PyCAW audio endpoint: {e}")

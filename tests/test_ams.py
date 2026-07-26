@@ -6,7 +6,7 @@ import math
 import pytest
 
 from airos.algorithms.ams import AdaptiveMotionSmoothing
-from airos.config.settings import AMSConfig
+from config.settings import AMSConfig
 
 
 def test_ams_disabled():

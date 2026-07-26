@@ -11,7 +11,7 @@ from typing import Optional, Tuple
 import cv2
 import numpy as np
 
-from airos.config.settings import CameraConfig
+from config.settings import CameraConfig
 from airos.logger.airos_logger import get_logger
 
 logger = get_logger()

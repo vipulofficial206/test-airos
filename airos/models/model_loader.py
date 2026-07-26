@@ -11,7 +11,7 @@ from typing import Any, Dict, List, Optional, Tuple
 
 import numpy as np
 
-from airos.config.settings import ModelConfig
+from config.settings import ModelConfig
 from airos.logger.airos_logger import get_logger
 
 logger = get_logger()

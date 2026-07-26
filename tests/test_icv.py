@@ -6,7 +6,7 @@ import time
 import pytest
 
 from airos.algorithms.icv import IntentBasedClickVerification
-from airos.config.settings import ICVConfig
+from config.settings import ICVConfig
 from airos.detector.hand_detector import HandDetection
 from airos.tracking.hand_tracker import TrackedHand
 
