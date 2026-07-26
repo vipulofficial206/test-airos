@@ -86,6 +86,7 @@ pytest tests/ -v
 
 ## Documentation Links
 
+- [Complete Hand Movement & Gesture Manual](docs/GESTURE_MANUAL.md)
 - [System Architecture Specification](docs/ARCHITECTURE.md)
 - [Mathematical Formulations (AMS, BSI, ICV)](docs/MATHEMATICS.md)
 - [User Manual & Troubleshooting Guide](docs/USER_MANUAL.md)

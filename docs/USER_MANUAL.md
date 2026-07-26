@@ -9,7 +9,7 @@
 
 ---
 
-## 2. Conda Environment Setup
+## 2. Environment Setup
 
 Open Anaconda Prompt or Terminal in the project root directory (`e:\vitap\capstone project`):
 
@@ -28,19 +28,20 @@ pip install -r requirements.txt
 
 ## 3. Running AirOS++
 
-### A. Live Interactive Mode (With Webcam & HUD)
+### A. Desktop Control Center Application (GUI Window)
+```bash
+python app.py
+# Or double-click run_app.bat
+```
+
+### B. CLI Live Interactive Mode
 ```bash
 python main.py
 ```
 
-### B. Dry-Run Mode (Test gestures without moving OS mouse)
+### C. Dry-Run Mode (Test gestures without moving OS mouse)
 ```bash
 python main.py --dry-run
-```
-
-### C. Synthetic Mock Mode (Run without webcam peripheral)
-```bash
-python main.py --mock-camera --dry-run
 ```
 
 ### D. Automated Benchmark Runner
@@ -55,21 +56,27 @@ pytest tests/ -v
 
 ---
 
-## 4. Gesture Mapping Reference Guide
+## 4. Complete Gesture Reference Overview
+
+For detailed mathematical formulas and parameters, see [docs/GESTURE_MANUAL.md](file:///e:/vitap/capstone%20project/docs/GESTURE_MANUAL.md).
 
 | Hand Position / Gesture | Interaction Action | Operational Description |
 | :--- | :--- | :--- |
-| **Left Hand Movement** | **Cursor Navigation** | Centroid position mapped to screen boundaries. |
-| **Right Hand Fist/Pinch** | **Left Click** | ICV intent verified via aspect ratio shift ($\Delta AR$) + stillness. |
-| **Right Hand Wide Posture**| **Right Click** | Secondary ICV posture threshold. |
+| **Navigation Hand Open Palm** | **Cursor Navigation** | Smooth 2D cursor movement with AMS exponential filtering. |
+| **Action Hand Fist / Pinch** | **Left Click** | Intent-verified single Left Click via ICV engine. |
+| **Action Hand Double Tap** | **Double Click** | Two quick pulses within 0.45s trigger Double Click. |
+| **Action Hand Wide Palm** | **Right Click** | Wide horizontal posture ($AR > 1.35$) triggers Right Click. |
+| **Action Hand Sustained Fist** | **Drag & Drop** | Closed fist (>0.65s) holds mouse down; opening hand releases. |
+| **Action Hand Narrow Vertical** | **Middle Click** | Narrow vertical posture ($AR < 0.65$) triggers Middle Click. |
 | **Dual-Hand Distance** | **Master Volume** | Expanding hand separation increases volume; contracting decreases. |
 | **Dual-Hand Elevation** | **Display Brightness** | Raising/lowering vertical spatial offset adjusts screen brightness. |
+| **Dual-Hand Cross Hands** | **Mute Toggle** | Crossing both hands toggles master system mute on/off. |
 
 ---
 
-## 5. Troubleshooting & Configuration
+## 5. Troubleshooting & Parameter Tuning
 
-Editing thresholds in `config/default_config.yaml`:
+Editing thresholds in `config/default_config.yaml` or via the **Algorithm Tuning** tab in `app.py`:
 - **Adjusting Cursor Sensitivity**: Tweak `gesture.cursor_margin_ratio` (default `0.10`).
 - **Adjusting Motion Smoothing**: Modify `algorithms.ams.alpha_min` and `alpha_max`.
 - **Adjusting Accidental Click Sensitivity**: Increase `algorithms.icv.consecutive_frames_required` (default `4`).
