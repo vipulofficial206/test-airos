@@ -1,6 +1,6 @@
 """
 AirOS++ OS Controller API Integration Layer
-Simulates mouse movement, left/right/double/middle clicks, drag and drop, scrolling, volume, and brightness.
+Simulates mouse movement, left/right/double/middle clicks, drag and drop, scrolling, volume, brightness, swipes, and custom keybindings.
 Includes safety bounds clamping, dry-run testing mode, and platform fallbacks.
 """
 
@@ -16,7 +16,6 @@ from airos.logger.airos_logger import get_logger
 
 logger = get_logger()
 
-# Configure PyAutoGUI Failsafes
 pyautogui.FAILSAFE = True
 pyautogui.PAUSE = 0.001
 
@@ -68,9 +67,9 @@ class OSController:
                     target_y = max(0, min(self.screen_height - 1, target_y))
                     pyautogui.moveTo(target_x, target_y, _pause=False)
 
-            elif action.gesture_type == GestureType.LEFT_CLICK:
+            elif action.gesture_type in (GestureType.LEFT_CLICK, GestureType.DWELL_CLICK):
                 pyautogui.click(button="left")
-                logger.info("OS Controller: Left Click Executed")
+                logger.info(f"OS Controller: {action.description} Executed")
 
             elif action.gesture_type == GestureType.RIGHT_CLICK:
                 pyautogui.click(button="right")
@@ -110,9 +109,30 @@ class OSController:
             elif action.gesture_type == GestureType.BRIGHTNESS_CHANGE:
                 self.adjust_brightness(action.value_delta)
 
-            elif action.gesture_type == GestureType.APP_SWITCH_NEXT:
-                pyautogui.hotkey("alt", "tab")
-                logger.info("OS Controller: Alt+Tab App Switcher Triggered")
+            elif action.gesture_type == GestureType.SWIPE_LEFT:
+                pyautogui.hotkey("alt", "left")
+                logger.info("OS Controller: Swipe Left (Browser Back / Prev Desktop)")
+
+            elif action.gesture_type == GestureType.SWIPE_RIGHT:
+                pyautogui.hotkey("alt", "right")
+                logger.info("OS Controller: Swipe Right (Browser Forward / Next Desktop)")
+
+            elif action.gesture_type == GestureType.SWIPE_UP:
+                pyautogui.hotkey("win", "tab")
+                logger.info("OS Controller: Swipe Up (Task View)")
+
+            elif action.gesture_type == GestureType.SWIPE_DOWN:
+                pyautogui.hotkey("win", "d")
+                logger.info("OS Controller: Swipe Down (Show Desktop)")
+
+            elif action.gesture_type == GestureType.ZOOM_IN:
+                pyautogui.hotkey("ctrl", "+")
+
+            elif action.gesture_type == GestureType.ZOOM_OUT:
+                pyautogui.hotkey("ctrl", "-")
+
+            elif action.gesture_type == GestureType.SCREENSHOT:
+                pyautogui.hotkey("win", "printscreen")
 
             elif action.gesture_type == GestureType.MUTE_TOGGLE:
                 pyautogui.hotkey("volumemute")

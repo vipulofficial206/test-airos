@@ -149,7 +149,7 @@ def main():
 
             # 5. Gesture Interpretation Phase
             actions = gesture_interpreter.interpret(
-                stable_detections, tracker, (w_img, h_img)
+                stable_detections, tracker, (w_img, h_img), frame=frame
             )
 
             # 6. OS Control API Execution Phase

@@ -503,7 +503,7 @@ class AirOSDesktopApp:
                 stable_dets[0].centroid = smoothed_pos
                 smoothed_cursor_pos = smoothed_pos
 
-            actions = self.gesture_interpreter.interpret(stable_dets, self.tracker, (w_img, h_img))
+            actions = self.gesture_interpreter.interpret(stable_dets, self.tracker, (w_img, h_img), frame=frame)
             for action in actions:
                 self.os_controller.execute(action)
 
