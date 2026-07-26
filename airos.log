@@ -213,3 +213,20 @@
 [2026-07-27 02:00:18] [INFO] [os_controller.py:47] - Successfully initialized PyCAW audio endpoint controller.
 [2026-07-27 02:00:18] [INFO] [os_controller.py:47] - Successfully initialized PyCAW audio endpoint controller.
 [2026-07-27 02:00:18] [INFO] [os_controller.py:47] - Successfully initialized PyCAW audio endpoint controller.
+[2026-07-27 02:00:59] [INFO] [model_loader.py:83] - Initializing YOLOv10 detector backend from path: models\yolov10s.pt
+[2026-07-27 02:01:04] [WARNING] [model_loader.py:92] - Model file 'models\yolov10s.pt' not found on disk. Attempting to download standard yolov10s...
+[2026-07-27 02:01:04] [INFO] [model_loader.py:96] - Successfully loaded standard YOLOv10s weights.
+[2026-07-27 02:01:04] [INFO] [icv.py:76] - ICV Intent Verified! Triggering click action.
+[2026-07-27 02:01:04] [INFO] [icv.py:76] - ICV Intent Verified! Triggering click action.
+[2026-07-27 02:01:04] [INFO] [model_loader.py:83] - Initializing YOLOv10 detector backend from path: models\yolov10s.pt
+[2026-07-27 02:01:04] [WARNING] [model_loader.py:92] - Model file 'models\yolov10s.pt' not found on disk. Attempting to download standard yolov10s...
+[2026-07-27 02:01:04] [INFO] [model_loader.py:96] - Successfully loaded standard YOLOv10s weights.
+[2026-07-27 02:01:04] [INFO] [os_controller.py:47] - Successfully initialized PyCAW audio endpoint controller.
+[2026-07-27 02:01:08] [INFO] [os_controller.py:47] - Successfully initialized PyCAW audio endpoint controller.
+[2026-07-27 02:01:09] [INFO] [os_controller.py:47] - Successfully initialized PyCAW audio endpoint controller.
+[2026-07-27 02:01:09] [INFO] [os_controller.py:47] - Successfully initialized PyCAW audio endpoint controller.
+[2026-07-27 02:01:09] [INFO] [os_controller.py:47] - Successfully initialized PyCAW audio endpoint controller.
+[2026-07-27 02:01:09] [INFO] [os_controller.py:47] - Successfully initialized PyCAW audio endpoint controller.
+[2026-07-27 02:01:09] [INFO] [os_controller.py:47] - Successfully initialized PyCAW audio endpoint controller.
+[2026-07-27 02:01:09] [INFO] [os_controller.py:47] - Successfully initialized PyCAW audio endpoint controller.
+[2026-07-27 02:01:09] [INFO] [os_controller.py:47] - Successfully initialized PyCAW audio endpoint controller.

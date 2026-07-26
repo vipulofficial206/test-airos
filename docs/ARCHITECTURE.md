@@ -82,9 +82,10 @@
 
 1. **Frame Capture**: `ThreadedCameraReader` captures BGR frames asynchronously at 30 FPS into a single-item queue to prevent latency accumulation.
 2. **Hand Detection**: `HandDetector` feeds 320x320 scaled frames into `YOLOv10ModelLoader` executing on CPU.
-3. **Temporal Tracking**: `HandTracker` associates new detections with existing track histories using spatial centroid Euclidean distance matching and velocity prediction.
-4. **BSI Stability Evaluation**: `BoundingBoxStabilityIndex` computes multi-factor stability index $S_t$. Boxes with $S_t < T_{\text{BSI}}$ are marked unstable.
-5. **AMS Smoothing**: `AdaptiveMotionSmoothing` dynamically adjusts dynamic factor $\alpha_t$ based on speed magnitude $v_{\text{mag}}$, smoothing cursor movements.
-6. **ICV Click Intent**: `IntentBasedClickVerification` evaluates posture aspect ratio changes $\Delta AR$, stillness $v_{\text{mag}}$, and temporal frame persistence $N_{\text{icv}}$.
-7. **Action Dispatch**: `GestureInterpreter` converts states into `GestureAction` payloads, which `OSController` executes via PyAutoGUI, PyCAW, and screen-brightness-control.
-8. **HUD Render**: Telemetry dashboard overlays FPS, Latency (ms), Bounding Boxes, BSI, Alpha, and System Usage onto frame.
+3. **Finger Geometry Analysis**: `FingerDetector` crops hand ROI and calculates extended finger count, fingertip pinpoint $(x_{\text{tip}}, y_{\text{tip}})$, and convexity defect valleys in $< 1.5\text{ ms}$.
+4. **Temporal Tracking**: `HandTracker` associates new detections with existing track histories using spatial centroid Euclidean distance matching and velocity prediction.
+5. **BSI Stability Evaluation**: `BoundingBoxStabilityIndex` computes multi-factor stability index $S_t$. Boxes with $S_t < T_{\text{BSI}}$ are marked unstable.
+6. **AMS Smoothing**: `AdaptiveMotionSmoothing` dynamically adjusts dynamic factor $\alpha_t$ based on speed magnitude $v_{\text{mag}}$, smoothing cursor movements.
+7. **ICV Click Intent**: `IntentBasedClickVerification` evaluates posture aspect ratio changes $\Delta AR$, stillness $v_{\text{mag}}$, and temporal frame persistence $N_{\text{icv}}$.
+8. **Action Dispatch**: `GestureInterpreter` converts states into `GestureAction` payloads, which `OSController` executes via PyAutoGUI, PyCAW, and screen-brightness-control.
+9. **HUD Render**: Telemetry dashboard overlays FPS, Latency (ms), Bounding Boxes, BSI, Alpha, Fingertips, and System Usage onto frame.
