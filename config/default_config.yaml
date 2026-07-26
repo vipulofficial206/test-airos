@@ -1,0 +1,91 @@
+# AirOS++ Configuration File
+# Intent-Aware Adaptive Spatial Control Framework for Touchless HCI
+
+system:
+  name: "AirOS++"
+  version: "1.0.0"
+  log_level: "INFO"
+  log_to_file: true
+  log_file_path: "airos.log"
+  device: "cpu"                  # Strictly CPU execution
+  threads: 4
+
+camera:
+  device_id: 0
+  width: 640
+  height: 480
+  target_fps: 30
+  buffer_size: 1
+  auto_reconnect: true
+  reconnect_delay_sec: 2.0
+
+model:
+  yolo_model_path: "models/yolov10s.pt"
+  fallback_to_mock: true
+  confidence_threshold: 0.45
+  iou_threshold: 0.45
+  input_size: 320               # Optimized 320x320 for CPU inference
+
+detector:
+  max_hands: 2
+  temporal_memory_frames: 5
+  extrapolation_max_frames: 3
+
+algorithms:
+  ams:
+    enabled: true
+    alpha_min: 0.15             # High smoothing at low velocity
+    alpha_max: 0.85             # Direct tracking at high velocity
+    lambda_speed: 0.05          # Speed scaling exponent multiplier
+    velocity_deadzone: 1.5      # Pixels per frame deadzone
+
+  bsi:
+    enabled: true
+    threshold: 0.60             # Rejection threshold for unstable boxes
+    weights:
+      confidence: 0.25
+      displacement: 0.25
+      area_consistency: 0.20
+      aspect_ratio_consistency: 0.15
+      temporal_persistence: 0.15
+    decay_params:
+      gamma_displacement: 0.08
+      gamma_area: 2.0
+      gamma_aspect: 2.0
+    persistence_required_frames: 5
+
+  icv:
+    enabled: true
+    aspect_ratio_shift_threshold: 0.15
+    bsi_threshold: 0.65
+    max_velocity_threshold: 4.0
+    consecutive_frames_required: 4
+    cooldown_sec: 0.35
+
+gesture:
+  cursor_hand: "left"           # Primary hand for cursor positioning
+  action_hand: "right"          # Secondary hand for click/trigger
+  cursor_margin_ratio: 0.10     # Active screen margin padding ratio
+  scroll_speed_multiplier: 12
+  volume_sensitivity: 1.5
+  brightness_sensitivity: 1.5
+  distance_min_px: 50.0
+  distance_max_px: 400.0
+
+controller:
+  pyautogui_failsafe: true
+  dry_run: false                # Set true to simulate without OS API calls
+  action_cooldown_ms: 100
+
+hud:
+  enabled: true
+  show_fps: true
+  show_latency: true
+  show_confidence: true
+  show_bsi: true
+  show_ams_alpha: true
+  show_system_usage: true
+  show_bounding_boxes: true
+  show_centroids: true
+  box_color_stable: [0, 255, 0]      # BGR Green
+  box_color_unstable: [0, 0, 255]   # BGR Red

@@ -1,0 +1,83 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "AirOSConfigSchema",
+  "type": "object",
+  "required": ["system", "camera", "model", "detector", "algorithms", "gesture", "controller", "hud"],
+  "properties": {
+    "system": {
+      "type": "object",
+      "required": ["name", "version", "log_level", "device"],
+      "properties": {
+        "name": { "type": "string" },
+        "version": { "type": "string" },
+        "log_level": { "type": "string", "enum": ["DEBUG", "INFO", "WARNING", "ERROR", "CRITICAL"] },
+        "log_to_file": { "type": "boolean" },
+        "log_file_path": { "type": "string" },
+        "device": { "type": "string" },
+        "threads": { "type": "integer", "minimum": 1 }
+      }
+    },
+    "camera": {
+      "type": "object",
+      "required": ["device_id", "width", "height", "target_fps"],
+      "properties": {
+        "device_id": { "type": "integer" },
+        "width": { "type": "integer", "minimum": 160 },
+        "height": { "type": "integer", "minimum": 120 },
+        "target_fps": { "type": "integer", "minimum": 1 },
+        "buffer_size": { "type": "integer", "minimum": 1 },
+        "auto_reconnect": { "type": "boolean" },
+        "reconnect_delay_sec": { "type": "number", "minimum": 0.1 }
+      }
+    },
+    "model": {
+      "type": "object",
+      "required": ["yolo_model_path", "confidence_threshold", "input_size"],
+      "properties": {
+        "yolo_model_path": { "type": "string" },
+        "fallback_to_mock": { "type": "boolean" },
+        "confidence_threshold": { "type": "number", "minimum": 0.0, "maximum": 1.0 },
+        "iou_threshold": { "type": "number", "minimum": 0.0, "maximum": 1.0 },
+        "input_size": { "type": "integer", "minimum": 128 }
+      }
+    },
+    "algorithms": {
+      "type": "object",
+      "required": ["ams", "bsi", "icv"],
+      "properties": {
+        "ams": {
+          "type": "object",
+          "required": ["enabled", "alpha_min", "alpha_max", "lambda_speed"],
+          "properties": {
+            "enabled": { "type": "boolean" },
+            "alpha_min": { "type": "number", "minimum": 0.01, "maximum": 1.0 },
+            "alpha_max": { "type": "number", "minimum": 0.01, "maximum": 1.0 },
+            "lambda_speed": { "type": "number", "minimum": 0.0001 },
+            "velocity_deadzone": { "type": "number", "minimum": 0.0 }
+          }
+        },
+        "bsi": {
+          "type": "object",
+          "required": ["enabled", "threshold", "weights"],
+          "properties": {
+            "enabled": { "type": "boolean" },
+            "threshold": { "type": "number", "minimum": 0.0, "maximum": 1.0 },
+            "weights": { "type": "object" }
+          }
+        },
+        "icv": {
+          "type": "object",
+          "required": ["enabled", "aspect_ratio_shift_threshold", "bsi_threshold", "consecutive_frames_required"],
+          "properties": {
+            "enabled": { "type": "boolean" },
+            "aspect_ratio_shift_threshold": { "type": "number", "minimum": 0.0 },
+            "bsi_threshold": { "type": "number", "minimum": 0.0, "maximum": 1.0 },
+            "max_velocity_threshold": { "type": "number", "minimum": 0.0 },
+            "consecutive_frames_required": { "type": "integer", "minimum": 1 },
+            "cooldown_sec": { "type": "number", "minimum": 0.0 }
+          }
+        }
+      }
+    }
+  }
+}
