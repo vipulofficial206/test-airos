@@ -1,6 +1,6 @@
 """
 AirOS++ OS Controller API Integration Layer
-Simulates mouse movement, clicks, vertical scrolling, master volume, and display brightness.
+Simulates mouse movement, left/right/double/middle clicks, drag and drop, scrolling, volume, and brightness.
 Includes safety bounds clamping, dry-run testing mode, and platform fallbacks.
 """
 
@@ -29,6 +29,7 @@ class OSController:
         self.screen_width, self.screen_height = pyautogui.size()
         self.last_action_time: float = 0.0
         self.volume_interface = None
+        self.is_mouse_down = False
         self._init_audio_backend()
 
     def _init_audio_backend(self) -> None:
@@ -57,26 +58,43 @@ class OSController:
             logger.debug(f"[DRY-RUN] Executed Action: {action.description}")
             return
 
-        current_time = time.time()
-
         try:
             if action.gesture_type == GestureType.CURSOR_MOVE:
                 if action.cursor_target_norm is not None:
                     nx, ny = action.cursor_target_norm
                     target_x = int(nx * self.screen_width)
                     target_y = int(ny * self.screen_height)
-                    # Clamp to screen boundary
                     target_x = max(0, min(self.screen_width - 1, target_x))
                     target_y = max(0, min(self.screen_height - 1, target_y))
                     pyautogui.moveTo(target_x, target_y, _pause=False)
 
             elif action.gesture_type == GestureType.LEFT_CLICK:
                 pyautogui.click(button="left")
-                logger.info("OS Controller: Left Click Triggered")
+                logger.info("OS Controller: Left Click Executed")
 
             elif action.gesture_type == GestureType.RIGHT_CLICK:
                 pyautogui.click(button="right")
-                logger.info("OS Controller: Right Click Triggered")
+                logger.info("OS Controller: Right Click Executed")
+
+            elif action.gesture_type == GestureType.DOUBLE_CLICK:
+                pyautogui.doubleClick()
+                logger.info("OS Controller: Double Click Executed")
+
+            elif action.gesture_type == GestureType.MIDDLE_CLICK:
+                pyautogui.middleClick()
+                logger.info("OS Controller: Middle Click Executed")
+
+            elif action.gesture_type == GestureType.DRAG_START:
+                if not self.is_mouse_down:
+                    pyautogui.mouseDown(button="left")
+                    self.is_mouse_down = True
+                    logger.info("OS Controller: Drag Start (Mouse Down)")
+
+            elif action.gesture_type == GestureType.DRAG_END:
+                if self.is_mouse_down:
+                    pyautogui.mouseUp(button="left")
+                    self.is_mouse_down = False
+                    logger.info("OS Controller: Drag End (Mouse Up / Release)")
 
             elif action.gesture_type == GestureType.SCROLL_UP:
                 steps = int(action.value_delta)
@@ -91,6 +109,14 @@ class OSController:
 
             elif action.gesture_type == GestureType.BRIGHTNESS_CHANGE:
                 self.adjust_brightness(action.value_delta)
+
+            elif action.gesture_type == GestureType.APP_SWITCH_NEXT:
+                pyautogui.hotkey("alt", "tab")
+                logger.info("OS Controller: Alt+Tab App Switcher Triggered")
+
+            elif action.gesture_type == GestureType.MUTE_TOGGLE:
+                pyautogui.hotkey("volumemute")
+                logger.info("OS Controller: Volume Mute Toggled")
 
         except Exception as e:
             logger.error(f"Error executing OS Controller action '{action.description}': {e}")
