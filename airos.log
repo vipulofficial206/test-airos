@@ -95,3 +95,47 @@
 [2026-07-27 01:28:14] [INFO] [model_loader.py:96] - Successfully loaded standard YOLOv10s weights.
 [2026-07-27 01:28:14] [INFO] [os_controller.py:47] - Successfully initialized PyCAW audio endpoint controller.
 [2026-07-27 01:28:18] [INFO] [os_controller.py:47] - Successfully initialized PyCAW audio endpoint controller.
+[2026-07-27 01:35:19] [INFO] [model_loader.py:83] - Initializing YOLOv10 detector backend from path: models\yolov10s.pt
+[2026-07-27 01:35:23] [WARNING] [model_loader.py:92] - Model file 'models\yolov10s.pt' not found on disk. Attempting to download standard yolov10s...
+[2026-07-27 01:35:23] [INFO] [model_loader.py:96] - Successfully loaded standard YOLOv10s weights.
+[2026-07-27 01:35:23] [INFO] [icv.py:76] - ICV Intent Verified! Triggering click action.
+[2026-07-27 01:35:23] [INFO] [icv.py:76] - ICV Intent Verified! Triggering click action.
+[2026-07-27 01:35:23] [INFO] [model_loader.py:83] - Initializing YOLOv10 detector backend from path: models\yolov10s.pt
+[2026-07-27 01:35:23] [WARNING] [model_loader.py:92] - Model file 'models\yolov10s.pt' not found on disk. Attempting to download standard yolov10s...
+[2026-07-27 01:35:23] [INFO] [model_loader.py:96] - Successfully loaded standard YOLOv10s weights.
+[2026-07-27 01:35:23] [INFO] [os_controller.py:47] - Successfully initialized PyCAW audio endpoint controller.
+[2026-07-27 01:35:27] [INFO] [os_controller.py:47] - Successfully initialized PyCAW audio endpoint controller.
+[2026-07-27 01:37:19] [INFO] [system_info.py:31] - =====================================================
+[2026-07-27 01:37:19] [INFO] [system_info.py:32] -            AirOS++ System Environment Info           
+[2026-07-27 01:37:19] [INFO] [system_info.py:33] - =====================================================
+[2026-07-27 01:37:19] [INFO] [system_info.py:35] -   OS                       : Windows 10 (64bit)
+[2026-07-27 01:37:19] [INFO] [system_info.py:35] -   Python                   : 3.11.15
+[2026-07-27 01:37:19] [INFO] [system_info.py:35] -   CPU                      : Intel64 Family 6 Model 140 Stepping 2, GenuineIntel
+[2026-07-27 01:37:19] [INFO] [system_info.py:35] -   Cores (Physical/Logical) : 4/8
+[2026-07-27 01:37:19] [INFO] [system_info.py:35] -   RAM Total                : 15.65 GB
+[2026-07-27 01:37:19] [INFO] [system_info.py:36] - =====================================================
+[2026-07-27 01:40:29] [INFO] [system_info.py:31] - =====================================================
+[2026-07-27 01:40:29] [INFO] [system_info.py:32] -            AirOS++ System Environment Info           
+[2026-07-27 01:40:29] [INFO] [system_info.py:33] - =====================================================
+[2026-07-27 01:40:29] [INFO] [system_info.py:35] -   OS                       : Windows 10 (64bit)
+[2026-07-27 01:40:29] [INFO] [system_info.py:35] -   Python                   : 3.11.15
+[2026-07-27 01:40:29] [INFO] [system_info.py:35] -   CPU                      : Intel64 Family 6 Model 140 Stepping 2, GenuineIntel
+[2026-07-27 01:40:29] [INFO] [system_info.py:35] -   Cores (Physical/Logical) : 4/8
+[2026-07-27 01:40:29] [INFO] [system_info.py:35] -   RAM Total                : 15.65 GB
+[2026-07-27 01:40:29] [INFO] [system_info.py:36] - =====================================================
+[2026-07-27 01:40:43] [INFO] [model_loader.py:83] - Initializing YOLOv10 detector backend from path: models\yolov10s.pt
+[2026-07-27 01:40:46] [WARNING] [model_loader.py:92] - Model file 'models\yolov10s.pt' not found on disk. Attempting to download standard yolov10s...
+[2026-07-27 01:40:46] [INFO] [model_loader.py:96] - Successfully loaded standard YOLOv10s weights.
+[2026-07-27 01:40:46] [INFO] [os_controller.py:47] - Successfully initialized PyCAW audio endpoint controller.
+[2026-07-27 01:40:46] [INFO] [camera.py:63] - Opening OpenCV VideoCapture device index 0...
+[2026-07-27 01:41:26] [INFO] [camera.py:125] - ThreadedCameraReader cleanly stopped.
+[2026-07-27 01:42:59] [INFO] [model_loader.py:83] - Initializing YOLOv10 detector backend from path: models\yolov10s.pt
+[2026-07-27 01:43:04] [WARNING] [model_loader.py:92] - Model file 'models\yolov10s.pt' not found on disk. Attempting to download standard yolov10s...
+[2026-07-27 01:43:04] [INFO] [model_loader.py:96] - Successfully loaded standard YOLOv10s weights.
+[2026-07-27 01:43:04] [INFO] [icv.py:76] - ICV Intent Verified! Triggering click action.
+[2026-07-27 01:43:04] [INFO] [icv.py:76] - ICV Intent Verified! Triggering click action.
+[2026-07-27 01:43:04] [INFO] [model_loader.py:83] - Initializing YOLOv10 detector backend from path: models\yolov10s.pt
+[2026-07-27 01:43:04] [WARNING] [model_loader.py:92] - Model file 'models\yolov10s.pt' not found on disk. Attempting to download standard yolov10s...
+[2026-07-27 01:43:05] [INFO] [model_loader.py:96] - Successfully loaded standard YOLOv10s weights.
+[2026-07-27 01:43:05] [INFO] [os_controller.py:47] - Successfully initialized PyCAW audio endpoint controller.
+[2026-07-27 01:43:13] [INFO] [os_controller.py:47] - Successfully initialized PyCAW audio endpoint controller.
