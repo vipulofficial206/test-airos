@@ -50,6 +50,12 @@ def parse_args():
         help="Use synthetic frame generator instead of hardware webcam",
     )
     parser.add_argument(
+        "--camera-id",
+        type=int,
+        default=None,
+        help="Specify hardware webcam device index (e.g. 0, 1)",
+    )
+    parser.add_argument(
         "--frames",
         type=int,
         default=0,
@@ -70,6 +76,8 @@ def main():
     config = load_config(args.config)
     if args.dry_run:
         config.controller.dry_run = True
+    if args.camera_id is not None:
+        config.camera.device_id = args.camera_id
 
     # Setup Logging
     log_level = "DEBUG" if args.debug else config.system.log_level
