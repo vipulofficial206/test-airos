@@ -59,3 +59,39 @@
 [2026-07-27 01:14:53] [INFO] [run_benchmark.py:126] -   jitter_variance_px2      : 5.1703
 [2026-07-27 01:14:53] [INFO] [run_benchmark.py:126] -   clicks_verified          : 0
 [2026-07-27 01:14:53] [INFO] [run_benchmark.py:127] - =====================================================
+[2026-07-27 01:22:05] [INFO] [main.py:82] - Starting AirOS++ Touchless Control Framework...
+[2026-07-27 01:22:05] [INFO] [system_info.py:31] - =====================================================
+[2026-07-27 01:22:05] [INFO] [system_info.py:32] -            AirOS++ System Environment Info           
+[2026-07-27 01:22:05] [INFO] [system_info.py:33] - =====================================================
+[2026-07-27 01:22:05] [INFO] [system_info.py:35] -   OS                       : Windows 10 (64bit)
+[2026-07-27 01:22:05] [INFO] [system_info.py:35] -   Python                   : 3.11.15
+[2026-07-27 01:22:05] [INFO] [system_info.py:35] -   CPU                      : Intel64 Family 6 Model 140 Stepping 2, GenuineIntel
+[2026-07-27 01:22:05] [INFO] [system_info.py:35] -   Cores (Physical/Logical) : 4/8
+[2026-07-27 01:22:05] [INFO] [system_info.py:35] -   RAM Total                : 15.65 GB
+[2026-07-27 01:22:05] [INFO] [system_info.py:36] - =====================================================
+[2026-07-27 01:22:05] [INFO] [model_loader.py:83] - Initializing YOLOv10 detector backend from path: models\yolov10s.pt
+[2026-07-27 01:22:10] [WARNING] [model_loader.py:92] - Model file 'models\yolov10s.pt' not found on disk. Attempting to download standard yolov10s...
+[2026-07-27 01:22:10] [INFO] [model_loader.py:96] - Successfully loaded standard YOLOv10s weights.
+[2026-07-27 01:22:10] [INFO] [os_controller.py:47] - Successfully initialized PyCAW audio endpoint controller.
+[2026-07-27 01:22:10] [INFO] [camera.py:63] - Opening OpenCV VideoCapture device index 0...
+[2026-07-27 01:22:13] [INFO] [main.py:103] - AirOS++ Real-time Pipeline Active. Press 'q' or 'ESC' to exit.
+[2026-07-27 01:27:43] [INFO] [model_loader.py:83] - Initializing YOLOv10 detector backend from path: models\yolov10s.pt
+[2026-07-27 01:27:48] [WARNING] [model_loader.py:92] - Model file 'models\yolov10s.pt' not found on disk. Attempting to download standard yolov10s...
+[2026-07-27 01:27:48] [INFO] [model_loader.py:96] - Successfully loaded standard YOLOv10s weights.
+[2026-07-27 01:27:48] [INFO] [icv.py:76] - ICV Intent Verified! Triggering click action.
+[2026-07-27 01:27:48] [INFO] [icv.py:76] - ICV Intent Verified! Triggering click action.
+[2026-07-27 01:27:48] [INFO] [model_loader.py:83] - Initializing YOLOv10 detector backend from path: models\yolov10s.pt
+[2026-07-27 01:27:48] [WARNING] [model_loader.py:92] - Model file 'models\yolov10s.pt' not found on disk. Attempting to download standard yolov10s...
+[2026-07-27 01:27:48] [INFO] [model_loader.py:96] - Successfully loaded standard YOLOv10s weights.
+[2026-07-27 01:27:48] [INFO] [os_controller.py:47] - Successfully initialized PyCAW audio endpoint controller.
+[2026-07-27 01:27:52] [INFO] [os_controller.py:47] - Successfully initialized PyCAW audio endpoint controller.
+[2026-07-27 01:28:08] [INFO] [model_loader.py:83] - Initializing YOLOv10 detector backend from path: models\yolov10s.pt
+[2026-07-27 01:28:13] [WARNING] [model_loader.py:92] - Model file 'models\yolov10s.pt' not found on disk. Attempting to download standard yolov10s...
+[2026-07-27 01:28:13] [INFO] [model_loader.py:96] - Successfully loaded standard YOLOv10s weights.
+[2026-07-27 01:28:14] [INFO] [icv.py:76] - ICV Intent Verified! Triggering click action.
+[2026-07-27 01:28:14] [INFO] [icv.py:76] - ICV Intent Verified! Triggering click action.
+[2026-07-27 01:28:14] [INFO] [model_loader.py:83] - Initializing YOLOv10 detector backend from path: models\yolov10s.pt
+[2026-07-27 01:28:14] [WARNING] [model_loader.py:92] - Model file 'models\yolov10s.pt' not found on disk. Attempting to download standard yolov10s...
+[2026-07-27 01:28:14] [INFO] [model_loader.py:96] - Successfully loaded standard YOLOv10s weights.
+[2026-07-27 01:28:14] [INFO] [os_controller.py:47] - Successfully initialized PyCAW audio endpoint controller.
+[2026-07-27 01:28:18] [INFO] [os_controller.py:47] - Successfully initialized PyCAW audio endpoint controller.

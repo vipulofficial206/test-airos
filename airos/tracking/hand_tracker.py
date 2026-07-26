@@ -125,6 +125,7 @@ class HandTracker:
                 baseline_aspect_ratio=det.aspect_ratio,
             )
             self.tracks[new_id] = track
+            matched_track_ids.add(new_id)
             det.track_id = new_id
             updated_detections.append(det)
 
