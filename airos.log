@@ -230,3 +230,102 @@
 [2026-07-27 02:01:09] [INFO] [os_controller.py:47] - Successfully initialized PyCAW audio endpoint controller.
 [2026-07-27 02:01:09] [INFO] [os_controller.py:47] - Successfully initialized PyCAW audio endpoint controller.
 [2026-07-27 02:01:09] [INFO] [os_controller.py:47] - Successfully initialized PyCAW audio endpoint controller.
+[2026-07-27 02:05:06] [INFO] [model_loader.py:83] - Initializing YOLOv10 detector backend from path: models\yolov10s.pt
+[2026-07-27 02:05:11] [WARNING] [model_loader.py:92] - Model file 'models\yolov10s.pt' not found on disk. Attempting to download standard yolov10s...
+[2026-07-27 02:05:11] [INFO] [model_loader.py:96] - Successfully loaded standard YOLOv10s weights.
+[2026-07-27 02:05:11] [INFO] [icv.py:76] - ICV Intent Verified! Triggering click action.
+[2026-07-27 02:05:11] [INFO] [icv.py:76] - ICV Intent Verified! Triggering click action.
+[2026-07-27 02:05:11] [INFO] [icv.py:76] - ICV Intent Verified! Triggering click action.
+[2026-07-27 02:05:11] [INFO] [camera.py:57] - Initializing ThreadedCameraReader in Synthetic Mock Mode.
+[2026-07-27 02:05:11] [INFO] [model_loader.py:83] - Initializing YOLOv10 detector backend from path: models\yolov10s.pt
+[2026-07-27 02:05:11] [WARNING] [model_loader.py:92] - Model file 'models\yolov10s.pt' not found on disk. Attempting to download standard yolov10s...
+[2026-07-27 02:05:11] [INFO] [model_loader.py:96] - Successfully loaded standard YOLOv10s weights.
+[2026-07-27 02:05:11] [INFO] [os_controller.py:47] - Successfully initialized PyCAW audio endpoint controller.
+[2026-07-27 02:05:16] [INFO] [camera.py:125] - ThreadedCameraReader cleanly stopped.
+[2026-07-27 02:05:16] [INFO] [camera.py:57] - Initializing ThreadedCameraReader in Synthetic Mock Mode.
+[2026-07-27 02:05:16] [INFO] [camera.py:125] - ThreadedCameraReader cleanly stopped.
+[2026-07-27 02:05:16] [INFO] [camera.py:57] - Initializing ThreadedCameraReader in Synthetic Mock Mode.
+[2026-07-27 02:05:16] [INFO] [camera.py:125] - ThreadedCameraReader cleanly stopped.
+[2026-07-27 02:05:16] [INFO] [os_controller.py:47] - Successfully initialized PyCAW audio endpoint controller.
+[2026-07-27 02:05:16] [INFO] [os_controller.py:47] - Successfully initialized PyCAW audio endpoint controller.
+[2026-07-27 02:05:16] [INFO] [os_controller.py:47] - Successfully initialized PyCAW audio endpoint controller.
+[2026-07-27 02:05:16] [INFO] [os_controller.py:47] - Successfully initialized PyCAW audio endpoint controller.
+[2026-07-27 02:05:16] [INFO] [os_controller.py:47] - Successfully initialized PyCAW audio endpoint controller.
+[2026-07-27 02:05:16] [INFO] [os_controller.py:47] - Successfully initialized PyCAW audio endpoint controller.
+[2026-07-27 02:05:16] [INFO] [os_controller.py:47] - Successfully initialized PyCAW audio endpoint controller.
+[2026-07-27 02:05:16] [INFO] [os_controller.py:47] - Successfully initialized PyCAW audio endpoint controller.
+[2026-07-27 02:05:49] [INFO] [model_loader.py:83] - Initializing YOLOv10 detector backend from path: models\yolov10s.pt
+[2026-07-27 02:05:53] [WARNING] [model_loader.py:92] - Model file 'models\yolov10s.pt' not found on disk. Attempting to download standard yolov10s...
+[2026-07-27 02:05:53] [INFO] [model_loader.py:96] - Successfully loaded standard YOLOv10s weights.
+[2026-07-27 02:05:53] [INFO] [icv.py:76] - ICV Intent Verified! Triggering click action.
+[2026-07-27 02:05:53] [INFO] [icv.py:76] - ICV Intent Verified! Triggering click action.
+[2026-07-27 02:05:53] [INFO] [icv.py:76] - ICV Intent Verified! Triggering click action.
+[2026-07-27 02:05:53] [INFO] [camera.py:57] - Initializing ThreadedCameraReader in Synthetic Mock Mode.
+[2026-07-27 02:05:53] [INFO] [model_loader.py:83] - Initializing YOLOv10 detector backend from path: models\yolov10s.pt
+[2026-07-27 02:05:53] [WARNING] [model_loader.py:92] - Model file 'models\yolov10s.pt' not found on disk. Attempting to download standard yolov10s...
+[2026-07-27 02:05:53] [INFO] [model_loader.py:96] - Successfully loaded standard YOLOv10s weights.
+[2026-07-27 02:05:54] [INFO] [os_controller.py:47] - Successfully initialized PyCAW audio endpoint controller.
+[2026-07-27 02:05:58] [INFO] [camera.py:125] - ThreadedCameraReader cleanly stopped.
+[2026-07-27 02:05:58] [INFO] [camera.py:57] - Initializing ThreadedCameraReader in Synthetic Mock Mode.
+[2026-07-27 02:05:58] [INFO] [camera.py:125] - ThreadedCameraReader cleanly stopped.
+[2026-07-27 02:05:58] [INFO] [camera.py:125] - ThreadedCameraReader cleanly stopped.
+[2026-07-27 02:05:58] [INFO] [camera.py:57] - Initializing ThreadedCameraReader in Synthetic Mock Mode.
+[2026-07-27 02:05:58] [INFO] [camera.py:125] - ThreadedCameraReader cleanly stopped.
+[2026-07-27 02:05:58] [INFO] [os_controller.py:47] - Successfully initialized PyCAW audio endpoint controller.
+[2026-07-27 02:05:58] [INFO] [os_controller.py:47] - Successfully initialized PyCAW audio endpoint controller.
+[2026-07-27 02:05:58] [INFO] [os_controller.py:47] - Successfully initialized PyCAW audio endpoint controller.
+[2026-07-27 02:05:58] [INFO] [os_controller.py:47] - Successfully initialized PyCAW audio endpoint controller.
+[2026-07-27 02:05:58] [INFO] [os_controller.py:47] - Successfully initialized PyCAW audio endpoint controller.
+[2026-07-27 02:05:58] [INFO] [os_controller.py:47] - Successfully initialized PyCAW audio endpoint controller.
+[2026-07-27 02:05:58] [INFO] [os_controller.py:47] - Successfully initialized PyCAW audio endpoint controller.
+[2026-07-27 02:05:58] [INFO] [os_controller.py:47] - Successfully initialized PyCAW audio endpoint controller.
+[2026-07-27 02:06:12] [INFO] [model_loader.py:83] - Initializing YOLOv10 detector backend from path: models\yolov10s.pt
+[2026-07-27 02:06:17] [WARNING] [model_loader.py:92] - Model file 'models\yolov10s.pt' not found on disk. Attempting to download standard yolov10s...
+[2026-07-27 02:06:17] [INFO] [model_loader.py:96] - Successfully loaded standard YOLOv10s weights.
+[2026-07-27 02:06:17] [INFO] [icv.py:76] - ICV Intent Verified! Triggering click action.
+[2026-07-27 02:06:17] [INFO] [icv.py:76] - ICV Intent Verified! Triggering click action.
+[2026-07-27 02:06:17] [INFO] [icv.py:76] - ICV Intent Verified! Triggering click action.
+[2026-07-27 02:06:17] [INFO] [camera.py:57] - Initializing ThreadedCameraReader in Synthetic Mock Mode.
+[2026-07-27 02:06:17] [INFO] [model_loader.py:83] - Initializing YOLOv10 detector backend from path: models\yolov10s.pt
+[2026-07-27 02:06:17] [WARNING] [model_loader.py:92] - Model file 'models\yolov10s.pt' not found on disk. Attempting to download standard yolov10s...
+[2026-07-27 02:06:17] [INFO] [model_loader.py:96] - Successfully loaded standard YOLOv10s weights.
+[2026-07-27 02:06:18] [INFO] [os_controller.py:47] - Successfully initialized PyCAW audio endpoint controller.
+[2026-07-27 02:06:25] [INFO] [camera.py:125] - ThreadedCameraReader cleanly stopped.
+[2026-07-27 02:06:26] [INFO] [camera.py:57] - Initializing ThreadedCameraReader in Synthetic Mock Mode.
+[2026-07-27 02:06:26] [INFO] [camera.py:125] - ThreadedCameraReader cleanly stopped.
+[2026-07-27 02:06:26] [INFO] [camera.py:125] - ThreadedCameraReader cleanly stopped.
+[2026-07-27 02:06:26] [INFO] [camera.py:57] - Initializing ThreadedCameraReader in Synthetic Mock Mode.
+[2026-07-27 02:06:26] [INFO] [camera.py:125] - ThreadedCameraReader cleanly stopped.
+[2026-07-27 02:06:26] [INFO] [os_controller.py:47] - Successfully initialized PyCAW audio endpoint controller.
+[2026-07-27 02:06:26] [INFO] [os_controller.py:47] - Successfully initialized PyCAW audio endpoint controller.
+[2026-07-27 02:06:26] [INFO] [os_controller.py:47] - Successfully initialized PyCAW audio endpoint controller.
+[2026-07-27 02:06:26] [INFO] [os_controller.py:47] - Successfully initialized PyCAW audio endpoint controller.
+[2026-07-27 02:06:27] [INFO] [os_controller.py:47] - Successfully initialized PyCAW audio endpoint controller.
+[2026-07-27 02:06:27] [INFO] [os_controller.py:47] - Successfully initialized PyCAW audio endpoint controller.
+[2026-07-27 02:06:27] [INFO] [os_controller.py:47] - Successfully initialized PyCAW audio endpoint controller.
+[2026-07-27 02:06:27] [INFO] [os_controller.py:47] - Successfully initialized PyCAW audio endpoint controller.
+[2026-07-27 02:06:43] [INFO] [model_loader.py:83] - Initializing YOLOv10 detector backend from path: models\yolov10s.pt
+[2026-07-27 02:06:48] [WARNING] [model_loader.py:92] - Model file 'models\yolov10s.pt' not found on disk. Attempting to download standard yolov10s...
+[2026-07-27 02:06:48] [INFO] [model_loader.py:96] - Successfully loaded standard YOLOv10s weights.
+[2026-07-27 02:06:49] [INFO] [icv.py:76] - ICV Intent Verified! Triggering click action.
+[2026-07-27 02:06:49] [INFO] [icv.py:76] - ICV Intent Verified! Triggering click action.
+[2026-07-27 02:06:49] [INFO] [icv.py:76] - ICV Intent Verified! Triggering click action.
+[2026-07-27 02:06:49] [INFO] [camera.py:57] - Initializing ThreadedCameraReader in Synthetic Mock Mode.
+[2026-07-27 02:06:49] [INFO] [model_loader.py:83] - Initializing YOLOv10 detector backend from path: models\yolov10s.pt
+[2026-07-27 02:06:49] [WARNING] [model_loader.py:92] - Model file 'models\yolov10s.pt' not found on disk. Attempting to download standard yolov10s...
+[2026-07-27 02:06:49] [INFO] [model_loader.py:96] - Successfully loaded standard YOLOv10s weights.
+[2026-07-27 02:06:49] [INFO] [os_controller.py:47] - Successfully initialized PyCAW audio endpoint controller.
+[2026-07-27 02:06:56] [INFO] [camera.py:125] - ThreadedCameraReader cleanly stopped.
+[2026-07-27 02:06:56] [INFO] [camera.py:57] - Initializing ThreadedCameraReader in Synthetic Mock Mode.
+[2026-07-27 02:06:56] [INFO] [camera.py:125] - ThreadedCameraReader cleanly stopped.
+[2026-07-27 02:06:57] [INFO] [camera.py:125] - ThreadedCameraReader cleanly stopped.
+[2026-07-27 02:06:57] [INFO] [camera.py:57] - Initializing ThreadedCameraReader in Synthetic Mock Mode.
+[2026-07-27 02:06:57] [INFO] [camera.py:125] - ThreadedCameraReader cleanly stopped.
+[2026-07-27 02:06:57] [INFO] [os_controller.py:47] - Successfully initialized PyCAW audio endpoint controller.
+[2026-07-27 02:06:57] [INFO] [os_controller.py:47] - Successfully initialized PyCAW audio endpoint controller.
+[2026-07-27 02:06:57] [INFO] [os_controller.py:47] - Successfully initialized PyCAW audio endpoint controller.
+[2026-07-27 02:06:57] [INFO] [os_controller.py:47] - Successfully initialized PyCAW audio endpoint controller.
+[2026-07-27 02:06:57] [INFO] [os_controller.py:47] - Successfully initialized PyCAW audio endpoint controller.
+[2026-07-27 02:06:57] [INFO] [os_controller.py:47] - Successfully initialized PyCAW audio endpoint controller.
+[2026-07-27 02:06:57] [INFO] [os_controller.py:47] - Successfully initialized PyCAW audio endpoint controller.
+[2026-07-27 02:06:57] [INFO] [os_controller.py:47] - Successfully initialized PyCAW audio endpoint controller.

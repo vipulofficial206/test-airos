@@ -5,7 +5,7 @@ Unit Tests for Configuration Settings & Schema Validator
 from pathlib import Path
 import pytest
 
-from config.settings import load_config, AirOSConfig, SystemConfig, CameraConfig
+from config.settings import load_config, AirOSConfig, SystemConfig, CameraConfig, ModelConfig, DetectorConfig
 
 
 def test_load_default_config():
@@ -28,3 +28,17 @@ def test_system_config_defaults():
     sys_cfg = SystemConfig()
     assert sys_cfg.device == "cpu"
     assert sys_cfg.threads == 4
+
+
+def test_model_config_defaults():
+    model_cfg = ModelConfig()
+    assert "yolov10s" in model_cfg.yolo_model_path
+    assert model_cfg.input_size == 320
+    assert model_cfg.confidence_threshold == 0.45
+
+
+def test_detector_config_defaults():
+    det_cfg = DetectorConfig()
+    assert det_cfg.max_hands == 2
+    assert det_cfg.temporal_memory_frames == 5
+    assert det_cfg.extrapolation_max_frames == 3
