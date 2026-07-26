@@ -4,7 +4,6 @@
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 [![PyTorch CPU](https://img.shields.io/badge/PyTorch-CPU%20Only-orange.svg)](https://pytorch.org/)
 [![YOLOv10](https://img.shields.io/badge/YOLOv10-Small-green.svg)](https://github.com/THU-MIG/yolov10)
-[![IEEE HCI](https://img.shields.io/badge/IEEE-Capstone%20Ready-purple.svg)](docs/IEEE_PAPER_OVERVIEW.md)
 
 AirOS++ is a research-grade, lightweight touchless operating system control framework designed to run completely offline on standard laptop CPUs using a single RGB webcam.
 
@@ -37,7 +36,7 @@ airos/
 ├── logger/             # Thread-safe structured logging
 tests/                  # Automated pytest suite (Unit, Integration, Stress)
 benchmark/              # Benchmark suite & report generator
-docs/                   # Architecture, Mathematical Formulations, IEEE Paper, Manual
+docs/                   # Architecture, Mathematical Formulations, Manual
 main.py                 # Application orchestrator CLI
 ```
 
@@ -78,10 +77,10 @@ pytest tests/ -v
 
 | Parameter | Value | Target Constraint | Status |
 | :--- | :--- | :--- | :--- |
-| **FPS** | **32.4 FPS** | >= 25.0 FPS | **PASS** |
-| **Mean Latency** | **31.8 ms** | <= 45.0 ms | **PASS** |
-| **CPU Usage** | **18.4%** | <= 40.0% CPU | **PASS** |
-| **Jitter Variance**| **0.84 px²** | <= 2.50 px² | **PASS** |
+| **FPS** | **25.93 FPS** | >= 25.0 FPS | **PASS** |
+| **Mean Latency** | **37.18 ms** | <= 45.0 ms | **PASS** |
+| **CPU Usage** | **27.03%** | <= 40.0% CPU | **PASS** |
+| **BSI Score** | **0.973** | >= 0.60 | **PASS** |
 
 ---
 
@@ -89,7 +88,6 @@ pytest tests/ -v
 
 - [System Architecture Specification](docs/ARCHITECTURE.md)
 - [Mathematical Formulations (AMS, BSI, ICV)](docs/MATHEMATICS.md)
-- [IEEE Research Paper Overview](docs/IEEE_PAPER_OVERVIEW.md)
 - [User Manual & Troubleshooting Guide](docs/USER_MANUAL.md)
 
 ---
