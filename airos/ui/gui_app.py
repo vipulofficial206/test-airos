@@ -347,7 +347,7 @@ class AirOSDesktopApp:
 
     def _on_hand_preference_changed(self, event):
         val = self.hand_var.get()
-        if "Left" in val:
+        if "Right" in val:
             self.config.gesture.cursor_hand = "right"
             self.config.gesture.action_hand = "left"
         else:

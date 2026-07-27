@@ -63,7 +63,7 @@ algorithms:
     cooldown_sec: 0.35
 
 gesture:
-  cursor_hand: "left"           # Primary hand for cursor positioning
+  cursor_hand: "right"          # Primary hand for cursor positioning (auto-fallbacks if single hand)
   action_hand: "right"          # Secondary hand for click/trigger
   cursor_margin_ratio: 0.10     # Active screen margin padding ratio
   scroll_speed_multiplier: 12

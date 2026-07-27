@@ -101,6 +101,10 @@ class ThreadedCameraReader:
                 time.sleep(0.01)
                 continue
 
+            # Mirror flip real webcam frames horizontally for intuitive 1-to-1 spatial motion
+            if not self.mock_mode:
+                frame = cv2.flip(frame, 1)
+
             # Keep queue size at 1 to discard stale buffered frames (low latency)
             if self.frame_queue.full():
                 try:
