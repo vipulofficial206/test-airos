@@ -85,13 +85,17 @@ class SkinContourHandDetector(BaseDetectorEngine):
         h_img, w_img = image.shape[:2]
         gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
 
-        # Detect face boxes in the frame to exclude them with 100% precision
+        # Apply CLAHE contrast equalization so shadowed/backlit faces are detected with 100% precision
+        clahe = cv2.createCLAHE(clipLimit=2.0, tileGridSize=(8, 8))
+        eq_gray = clahe.apply(gray)
+
+        # Detect face boxes in the frame to exclude them
         face_boxes = []
         if not self.face_cascade.empty():
-            faces = self.face_cascade.detectMultiScale(gray, scaleFactor=1.2, minNeighbors=4, minSize=(50, 50))
+            faces = self.face_cascade.detectMultiScale(eq_gray, scaleFactor=1.1, minNeighbors=3, minSize=(40, 40))
             for (fx, fy, fw, fh) in faces:
-                # Expand face box down to cover chin/neck region
-                face_boxes.append((fx - 15, fy - 15, fx + fw + 15, fy + fh + int(fh * 0.5)))
+                # Expand face box down to cover chin/neck/chest region
+                face_boxes.append((fx - 25, fy - 25, fx + fw + 25, fy + fh + int(fh * 0.8)))
 
         ycrcb = cv2.cvtColor(image, cv2.COLOR_BGR2YCrCb)
 
@@ -109,12 +113,19 @@ class SkinContourHandDetector(BaseDetectorEngine):
         contours, _ = cv2.findContours(skin_mask, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
         hand_candidates = []
 
+        max_allowed_area = w_img * h_img * 0.10  # Max 10% of total frame area
+        max_allowed_h = h_img * 0.38  # Max 38% of frame height
+        max_allowed_w = w_img * 0.38  # Max 38% of frame width
+
         for cnt in contours:
             area = cv2.contourArea(cnt)
-            if area < 1000:  # Ignore tiny noise
+            if area < 1000 or area > max_allowed_area:  # Filter out tiny noise AND large head/torso boxes
                 continue
 
             x, y, w, h = cv2.boundingRect(cnt)
+            if w > max_allowed_w or h > max_allowed_h:  # Head/torso size rejection
+                continue
+
             cx, cy = x + w / 2.0, y + h / 2.0
 
             # 100% Face Exclusion: Check if contour centroid is inside any face/head/neck box
@@ -124,12 +135,11 @@ class SkinContourHandDetector(BaseDetectorEngine):
                     is_face = True
                     break
 
-            # Fallback heuristic: Top-center region with head aspect ratio ~ 0.7-1.35
+            # Fallback heuristic: Top-center region with head aspect ratio ~ 0.6-1.4
             is_top_head = (
                 y < h_img * 0.40
                 and (w_img * 0.15 < cx < w_img * 0.85)
                 and 0.60 < (w / float(h + 1e-6)) < 1.40
-                and area > (w_img * h_img * 0.04)
             )
 
             # Skip face/head contour so ONLY raised HANDS are extracted!
