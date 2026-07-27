@@ -6,7 +6,8 @@ Includes safety bounds clamping, dry-run testing mode, and platform fallbacks.
 
 import sys
 import time
-from typing import Optional, Tuple
+from typing import Optional, Tuple, Any
+from collections import deque
 
 import pyautogui
 
@@ -27,8 +28,9 @@ class OSController:
         self.config = config
         self.screen_width, self.screen_height = pyautogui.size()
         self.last_action_time: float = 0.0
-        self.volume_interface = None
+        self.volume_interface: Optional[Any] = None
         self.is_mouse_down = False
+        self.pos_history: deque = deque(maxlen=4)
         self._init_audio_backend()
 
     def _init_audio_backend(self) -> None:
@@ -73,14 +75,21 @@ class OSController:
             if action.gesture_type == GestureType.CURSOR_MOVE:
                 if action.cursor_target_norm is not None:
                     nx, ny = action.cursor_target_norm
-                    target_x = int(nx * self.screen_width)
-                    target_y = int(ny * self.screen_height)
+                    raw_target_x = int(nx * self.screen_width)
+                    raw_target_y = int(ny * self.screen_height)
+
+                    # 4-Frame Moving Average Anti-Vibration Filter (Cancels laptop fan webcam vibration)
+                    self.pos_history.append((raw_target_x, raw_target_y))
+                    target_x = int(sum(p[0] for p in self.pos_history) / float(len(self.pos_history)))
+                    target_y = int(sum(p[1] for p in self.pos_history) / float(len(self.pos_history)))
+
                     target_x = max(2, min(self.screen_width - 3, target_x))
                     target_y = max(2, min(self.screen_height - 3, target_y))
 
                     try:
                         cur_x, cur_y = pyautogui.position()
-                        if abs(target_x - cur_x) >= 2 or abs(target_y - cur_y) >= 2:
+                        # 4-Pixel Anti-Vibration Threshold: Ignore micro oscillations caused by laptop fan vibration
+                        if abs(target_x - cur_x) >= 4 or abs(target_y - cur_y) >= 4:
                             pyautogui.moveTo(target_x, target_y, _pause=False)
                     except Exception:
                         pyautogui.moveTo(target_x, target_y, _pause=False)

@@ -1,11 +1,11 @@
 """
-AirOS++ Algorithm 1: Adaptive Motion Smoothing (AMS)
-Calculates dynamic exponential smoothing factor alpha based on velocity and acceleration.
-High velocity -> High alpha (Low smoothing, low latency)
-Low velocity  -> Low alpha (High smoothing, jitter cancellation)
+AirOS++ Adaptive Motion Smoothing (AMS) Engine
+Implements velocity-dependent dynamic exponential smoothing with Stillness Lock filtering.
+Mathematically formalizes: alpha_t = alpha_min + (1 - exp(-lambda * v_t)) * (alpha_max - alpha_min)
 """
 
 import math
+import time
 from typing import Optional, Tuple
 
 from config.settings import AMSConfig
