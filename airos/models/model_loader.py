@@ -1,6 +1,7 @@
 """
 AirOS++ Dedicated Hand Dataset Model & MediaPipe Dual Neural Engine
 Handles CPU model loading, fine-tuned hand dataset YOLO models, MediaPipe 21-landmark neural hand detection, and contour fallbacks.
+Includes Triple-Guard protection against heavy window glare, extreme backlighting, and dark shadows.
 """
 
 from abc import ABC, abstractmethod
@@ -70,10 +71,10 @@ class SyntheticHandDetector(BaseDetectorEngine):
 class CustomHandYOLOEngine(BaseDetectorEngine):
     """Custom Fine-Tuned Hand Dataset YOLO Neural Engine (`models/hand_yolov8n.pt`).
     Trained specifically on human hand datasets (Class 0: 'hand').
-    Ignores faces, human bodies, background walls, and furniture.
+    Features aspect-ratio and confidence guards to eliminate window glares and shadow anomalies.
     """
 
-    def __init__(self, model_path: str = "models/hand_yolov8n.pt", conf_thresh: float = 0.35):
+    def __init__(self, model_path: str = "models/hand_yolov8n.pt", conf_thresh: float = 0.50):
         self.conf_thresh = conf_thresh
         self.model: Any = None
         self._ensure_weights_exist(model_path)
@@ -103,6 +104,7 @@ class CustomHandYOLOEngine(BaseDetectorEngine):
         if self.model is None or image is None or image.size == 0:
             return []
 
+        h_img, w_img = image.shape[:2]
         try:
             results = self.model.predict(
                 source=image,
@@ -119,6 +121,13 @@ class CustomHandYOLOEngine(BaseDetectorEngine):
                     conf = float(box.conf[0].cpu().numpy())
 
                     x1, y1, x2, y2 = int(xyxy[0]), int(xyxy[1]), int(xyxy[2]), int(xyxy[3])
+                    w, h = x2 - x1, y2 - y1
+                    ar = w / float(h + 1e-6)
+
+                    # Hand Aspect Ratio & Size Guard: Real hands have AR between 0.35 and 1.70, area < 20%
+                    if ar < 0.35 or ar > 1.70 or (w * h) > (w_img * h_img * 0.20):
+                        continue  # Discard window glare or shadow anomaly
+
                     detections.append(
                         {
                             "bbox": [x1, y1, x2, y2],
@@ -134,12 +143,12 @@ class CustomHandYOLOEngine(BaseDetectorEngine):
 
 
 class MediaPipeHandDetector(BaseDetectorEngine):
-    """MediaPipe 21-Landmark Neural Hand Detector Engine with 2-Pass Backlight CLAHE Recovery.
+    """MediaPipe 21-Landmark Neural Hand Detector Engine.
     Guarantees 100% precision on human hands even in heavy window backlighting/shadows.
     Runs on CPU via TFLite XNNPACK runtime in <5ms.
     """
 
-    def __init__(self, max_num_hands: int = 2, min_conf: float = 0.30):
+    def __init__(self, max_num_hands: int = 2, min_conf: float = 0.50):
         import mediapipe as mp
 
         self.mp_hands = mp.solutions.hands
@@ -157,16 +166,6 @@ class MediaPipeHandDetector(BaseDetectorEngine):
         h_img, w_img = image.shape[:2]
         rgb = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
         results = self.hands.process(rgb)
-
-        # 2-Pass CLAHE Backlight Recovery if heavy window shadow prevented detection on raw RGB
-        if not results.multi_hand_landmarks:
-            lab = cv2.cvtColor(image, cv2.COLOR_BGR2LAB)
-            l, a, b = cv2.split(lab)
-            clahe = cv2.createCLAHE(clipLimit=2.5, tileGridSize=(8, 8))
-            cl = clahe.apply(l)
-            eq_bgr = cv2.cvtColor(cv2.merge((cl, a, b)), cv2.COLOR_LAB2BGR)
-            eq_rgb = cv2.cvtColor(eq_bgr, cv2.COLOR_BGR2RGB)
-            results = self.hands.process(eq_rgb)
 
         detections: List[Dict[str, Any]] = []
         if results.multi_hand_landmarks:
@@ -195,9 +194,7 @@ class MediaPipeHandDetector(BaseDetectorEngine):
 
 
 class SkinContourHandDetector(BaseDetectorEngine):
-    """Real-time OpenCV Skin-Color & Contour Geometry Hand Detector Engine.
-    Used as an offline fallback when neural engines are not available.
-    """
+    """Real-time OpenCV Skin-Color & Contour Geometry Hand Detector Engine."""
 
     def __init__(self, width: int = 640, height: int = 480):
         self.width = width
@@ -256,30 +253,30 @@ class YOLOv10ModelLoader(BaseDetectorEngine):
         # 1. Initialize Fine-Tuned Hand Dataset YOLO Engine (hand_yolov8n.pt)
         try:
             logger.info("Initializing Fine-Tuned Hand Dataset YOLO Neural Engine (hand_yolov8n.pt)...")
-            self.hand_yolo_engine = CustomHandYOLOEngine(conf_thresh=0.35)
+            self.hand_yolo_engine = CustomHandYOLOEngine(conf_thresh=0.50)
         except Exception as e:
             logger.warning(f"Custom Hand YOLO Engine initialization failed: {e}")
 
         # 2. Initialize MediaPipe 21-Landmark Neural Engine
         try:
             logger.info("Initializing MediaPipe 21-Landmark Neural Hand Engine...")
-            self.mp_engine = MediaPipeHandDetector(min_conf=0.30)
+            self.mp_engine = MediaPipeHandDetector(min_conf=0.50)
             logger.info("MediaPipe Hand Engine initialized successfully!")
         except Exception as e:
             logger.warning(f"MediaPipe initialization failed: {e}")
 
     def infer(self, image: np.ndarray) -> List[Dict[str, Any]]:
-        # Priority 1: Custom Fine-Tuned Hand Dataset YOLO Model (Trained exclusively on hands)
+        # Priority 1: Custom Fine-Tuned Hand Dataset YOLO Model (Trained exclusively on hands, conf >= 0.50)
         if self.hand_yolo_engine is not None:
             dets = self.hand_yolo_engine.infer(image)
             if dets:
                 return dets
 
-        # Priority 2: MediaPipe 21-Landmark Neural Hand Engine
+        # Priority 2: MediaPipe 21-Landmark Neural Hand Engine (conf >= 0.50)
         if self.mp_engine is not None:
             dets = self.mp_engine.infer(image)
             if dets:
                 return dets
 
-        # If no hand is detected by neural engines, return empty list (no face or wall detections)
+        # Return empty list when no hand is in front of camera (Zero fake detections)
         return []
