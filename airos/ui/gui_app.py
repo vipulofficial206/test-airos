@@ -189,8 +189,8 @@ class AirOSDesktopApp:
         hand_combo.grid(row=1, column=1, sticky=tk.EW, padx=10, pady=5)
         hand_combo.bind("<<ComboboxSelected>>", self._on_hand_preference_changed)
 
-        # Dry-Run Checkbox
-        self.dry_run_var = tk.BooleanVar(value=True)
+        # Dry-Run Checkbox (Disabled by default so mouse cursor moves real host desktop cursor)
+        self.dry_run_var = tk.BooleanVar(value=False)
         chk_dry = ttk.Checkbutton(
             box_mode, text="Dry-Run Mode (Simulate without moving real host OS cursor)", variable=self.dry_run_var
         )

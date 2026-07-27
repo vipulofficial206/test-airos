@@ -63,8 +63,8 @@ class OSController:
                     nx, ny = action.cursor_target_norm
                     target_x = int(nx * self.screen_width)
                     target_y = int(ny * self.screen_height)
-                    target_x = max(0, min(self.screen_width - 1, target_x))
-                    target_y = max(0, min(self.screen_height - 1, target_y))
+                    target_x = max(2, min(self.screen_width - 3, target_x))
+                    target_y = max(2, min(self.screen_height - 3, target_y))
                     pyautogui.moveTo(target_x, target_y, _pause=False)
 
             elif action.gesture_type in (GestureType.LEFT_CLICK, GestureType.DWELL_CLICK):
