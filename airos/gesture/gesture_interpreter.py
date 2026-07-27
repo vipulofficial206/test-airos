@@ -158,9 +158,14 @@ class GestureInterpreter:
         if action_hand is not None and action_hand.track_id is not None:
             tracked_hand = tracker.get_track(action_hand.track_id)
 
-            # Check ICV Intent Verification
+            # Check ICV Intent Verification for Explicit Gestures
             if self.icv.verify_click(action_hand, tracked_hand, current_time):
-                if finger_analysis and finger_analysis.gesture == FingerGesture.TWO_FINGERS_V:
+                is_two_v = finger_analysis and finger_analysis.gesture == FingerGesture.TWO_FINGERS_V
+                is_three = (finger_analysis and finger_analysis.gesture == FingerGesture.THREE_FINGERS) or (
+                    finger_analysis is None and action_hand.aspect_ratio < 0.40
+                )
+                
+                if is_two_v:
                     actions.append(
                         GestureAction(
                             gesture_type=GestureType.RIGHT_CLICK,
@@ -168,28 +173,12 @@ class GestureInterpreter:
                             description="2 Fingers (V-Sign) -> Right Click",
                         )
                     )
-                elif finger_analysis and finger_analysis.gesture == FingerGesture.THREE_FINGERS:
+                elif is_three:
                     actions.append(
                         GestureAction(
                             gesture_type=GestureType.MIDDLE_CLICK,
                             confidence=action_hand.confidence,
                             description="3 Fingers -> Middle Click",
-                        )
-                    )
-                elif action_hand.aspect_ratio < 0.65:
-                    actions.append(
-                        GestureAction(
-                            gesture_type=GestureType.MIDDLE_CLICK,
-                            confidence=action_hand.confidence,
-                            description="Narrow Hand -> Middle Click",
-                        )
-                    )
-                elif action_hand.aspect_ratio > 1.35:
-                    actions.append(
-                        GestureAction(
-                            gesture_type=GestureType.RIGHT_CLICK,
-                            confidence=action_hand.confidence,
-                            description="Wide Palm -> Right Click",
                         )
                     )
                 else:
@@ -207,7 +196,7 @@ class GestureInterpreter:
                             GestureAction(
                                 gesture_type=GestureType.LEFT_CLICK,
                                 confidence=action_hand.confidence,
-                                description="Index Tap / Fist -> Left Click",
+                                description="Index Pinch / Tap -> Left Click",
                             )
                         )
                         self.last_left_click_time = current_time

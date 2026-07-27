@@ -58,6 +58,18 @@ class OSController:
             return
 
         try:
+            if action.gesture_type in (
+                GestureType.LEFT_CLICK,
+                GestureType.RIGHT_CLICK,
+                GestureType.DOUBLE_CLICK,
+                GestureType.MIDDLE_CLICK,
+                GestureType.DWELL_CLICK,
+            ):
+                current_time = time.time()
+                if (current_time - self.last_action_time) < 0.60:  # 600ms Click Cooldown Guard
+                    return
+                self.last_action_time = current_time
+
             if action.gesture_type == GestureType.CURSOR_MOVE:
                 if action.cursor_target_norm is not None:
                     nx, ny = action.cursor_target_norm
