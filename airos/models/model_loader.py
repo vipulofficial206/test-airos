@@ -218,9 +218,5 @@ class YOLOv10ModelLoader(BaseDetectorEngine):
             except Exception as e:
                 logger.error(f"Error during YOLOv10 inference execution: {e}")
 
-        # Final Fallback to Synthetic Hand Detector if no real hand is visible
-        if self.fallback_engine is None:
-            self.fallback_engine = SyntheticHandDetector(
-                width=image.shape[1], height=image.shape[0]
-            )
-        return self.fallback_engine.infer(image)
+        # If no real hands are detected, return empty list (no ghost detections)
+        return []

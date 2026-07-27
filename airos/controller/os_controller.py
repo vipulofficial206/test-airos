@@ -157,9 +157,16 @@ class OSController:
         """Adjusts system master volume."""
         if self.volume_interface is not None:
             try:
-                cur_vol = self.volume_interface.GetMasterScalarLevel()
-                new_vol = max(0.0, min(1.0, cur_vol + delta))
-                self.volume_interface.SetMasterScalarLevel(new_vol, None)
+                if hasattr(self.volume_interface, "GetMasterVolumeLevelScalar"):
+                    cur_vol = float(self.volume_interface.GetMasterVolumeLevelScalar())
+                    new_vol = max(0.0, min(1.0, cur_vol + delta))
+                    self.volume_interface.SetMasterVolumeLevelScalar(new_vol, None)
+                elif hasattr(self.volume_interface, "GetMasterScalarLevel"):
+                    cur_vol = float(self.volume_interface.GetMasterScalarLevel())
+                    new_vol = max(0.0, min(1.0, cur_vol + delta))
+                    self.volume_interface.SetMasterScalarLevel(new_vol, None)
+                else:
+                    return
                 logger.info(f"Volume adjusted: {cur_vol*100:.0f}% -> {new_vol*100:.0f}%")
             except Exception as e:
                 logger.error(f"Failed to set master volume via PyCAW: {e}")
