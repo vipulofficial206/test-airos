@@ -87,18 +87,22 @@ class OSController:
 
             elif action.gesture_type in (GestureType.LEFT_CLICK, GestureType.DWELL_CLICK):
                 pyautogui.click(button="left")
+                self._play_click_chime()
                 logger.info(f"OS Controller: {action.description} Executed")
 
             elif action.gesture_type == GestureType.RIGHT_CLICK:
                 pyautogui.click(button="right")
+                self._play_click_chime()
                 logger.info("OS Controller: Right Click Executed")
 
             elif action.gesture_type == GestureType.DOUBLE_CLICK:
                 pyautogui.doubleClick()
+                self._play_click_chime()
                 logger.info("OS Controller: Double Click Executed")
 
             elif action.gesture_type == GestureType.MIDDLE_CLICK:
                 pyautogui.middleClick()
+                self._play_click_chime()
                 logger.info("OS Controller: Middle Click Executed")
 
             elif action.gesture_type == GestureType.DRAG_START:
@@ -190,3 +194,11 @@ class OSController:
             logger.info(f"Brightness adjusted: {cur_b}% -> {new_b}%")
         except Exception as e:
             logger.warning(f"Failed to adjust screen brightness: {e}")
+
+    def _play_click_chime(self) -> None:
+        """Plays subtle audio click chime feedback on Windows host OS."""
+        try:
+            import winsound
+            winsound.PlaySound("SystemAsterisk", winsound.SND_ALIAS | winsound.SND_ASYNC)
+        except Exception:
+            pass
