@@ -58,9 +58,14 @@ class AdaptiveMotionSmoothing:
         ay = (vy - self.prev_velocity[1]) / dt
         a_mag = math.hypot(ax, ay)
 
-        # 3. Apply Deadzone Filtering
+        # 3. Apply Deadzone Stillness Lock Filtering
         if v_mag < self.config.velocity_deadzone:
-            v_mag = 0.0
+            # Complete Stillness Lock: Freeze cursor position to 100% eliminate webcam sensor jitter
+            smoothed_pos = self.prev_smoothed_pos
+            self.prev_raw_pos = pos
+            self.prev_timestamp = timestamp
+            self.current_alpha = self.config.alpha_min
+            return smoothed_pos, self.config.alpha_min
 
         # 4. Compute Dynamic Alpha Scaling via Exponential Response Formula
         speed_factor = 1.0 - math.exp(-self.config.lambda_speed * v_mag)

@@ -77,7 +77,13 @@ class OSController:
                     target_y = int(ny * self.screen_height)
                     target_x = max(2, min(self.screen_width - 3, target_x))
                     target_y = max(2, min(self.screen_height - 3, target_y))
-                    pyautogui.moveTo(target_x, target_y, _pause=False)
+
+                    try:
+                        cur_x, cur_y = pyautogui.position()
+                        if abs(target_x - cur_x) >= 2 or abs(target_y - cur_y) >= 2:
+                            pyautogui.moveTo(target_x, target_y, _pause=False)
+                    except Exception:
+                        pyautogui.moveTo(target_x, target_y, _pause=False)
 
             elif action.gesture_type in (GestureType.LEFT_CLICK, GestureType.DWELL_CLICK):
                 pyautogui.click(button="left")
