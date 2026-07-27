@@ -75,12 +75,24 @@ class SkinContourHandDetector(BaseDetectorEngine):
     def __init__(self, width: int = 640, height: int = 480):
         self.width = width
         self.height = height
+        cascade_path = cv2.data.haarcascades + "haarcascade_frontalface_default.xml"
+        self.face_cascade = cv2.CascadeClassifier(cascade_path)
 
     def infer(self, image: np.ndarray) -> List[Dict[str, Any]]:
         if image is None or image.size == 0:
             return []
 
         h_img, w_img = image.shape[:2]
+        gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
+
+        # Detect face boxes in the frame to exclude them with 100% precision
+        face_boxes = []
+        if not self.face_cascade.empty():
+            faces = self.face_cascade.detectMultiScale(gray, scaleFactor=1.2, minNeighbors=4, minSize=(50, 50))
+            for (fx, fy, fw, fh) in faces:
+                # Expand face box down to cover chin/neck region
+                face_boxes.append((fx - 15, fy - 15, fx + fw + 15, fy + fh + int(fh * 0.5)))
+
         ycrcb = cv2.cvtColor(image, cv2.COLOR_BGR2YCrCb)
 
         # YCrCb Skin Color Range
@@ -103,16 +115,25 @@ class SkinContourHandDetector(BaseDetectorEngine):
                 continue
 
             x, y, w, h = cv2.boundingRect(cnt)
+            cx, cy = x + w / 2.0, y + h / 2.0
 
-            # Face Exclusion Heuristic: Top-center region with head aspect ratio ~ 0.7-1.35
-            is_face_candidate = (
-                y < h_img * 0.35
-                and (w_img * 0.20 < x + w / 2.0 < w_img * 0.80)
-                and 0.65 < (w / float(h + 1e-6)) < 1.35
+            # 100% Face Exclusion: Check if contour centroid is inside any face/head/neck box
+            is_face = False
+            for (fx1, fy1, fx2, fy2) in face_boxes:
+                if fx1 <= cx <= fx2 and fy1 <= cy <= fy2:
+                    is_face = True
+                    break
+
+            # Fallback heuristic: Top-center region with head aspect ratio ~ 0.7-1.35
+            is_top_head = (
+                y < h_img * 0.40
+                and (w_img * 0.15 < cx < w_img * 0.85)
+                and 0.60 < (w / float(h + 1e-6)) < 1.40
+                and area > (w_img * h_img * 0.04)
             )
 
-            # Skip face contour so only hand boxes are extracted
-            if is_face_candidate and area > (w_img * h_img * 0.04):
+            # Skip face/head contour so ONLY raised HANDS are extracted!
+            if is_face or is_top_head:
                 continue
 
             hull = cv2.convexHull(cnt)
