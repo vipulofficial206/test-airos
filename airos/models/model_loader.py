@@ -67,8 +67,8 @@ class SyntheticHandDetector(BaseDetectorEngine):
 
 
 class SkinContourHandDetector(BaseDetectorEngine):
-    """Real-time OpenCV Skin-Color & Contour Geometry Hand Detector Engine.
-    Requires hand contour convexity defect finger gaps to eliminate background wall/plug false positives.
+    """Real-time OpenCV Dual-Space (HSV+YCrCb) Skin Color & MOG2 Background Motion Hand Detector Engine.
+    Filters low-saturation beige walls, static cabinets, and wall sockets.
     Runs on CPU in <2ms, 100% offline.
     """
 
@@ -77,6 +77,9 @@ class SkinContourHandDetector(BaseDetectorEngine):
         self.height = height
         cascade_path = cv2.data.haarcascades + "haarcascade_frontalface_default.xml"
         self.face_cascade = cv2.CascadeClassifier(cascade_path)
+        self.bg_subtractor = cv2.createBackgroundSubtractorMOG2(
+            history=200, varThreshold=25, detectShadows=False
+        )
 
     def infer(self, image: np.ndarray) -> List[Dict[str, Any]]:
         if image is None or image.size == 0:
@@ -85,23 +88,39 @@ class SkinContourHandDetector(BaseDetectorEngine):
         h_img, w_img = image.shape[:2]
         gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
 
-        # Apply CLAHE contrast equalization for face detection
+        # 1. CLAHE Contrast Equalization for Face Exclusion
         clahe = cv2.createCLAHE(clipLimit=2.0, tileGridSize=(8, 8))
         eq_gray = clahe.apply(gray)
 
-        # Detect face boxes in the frame to exclude them
         face_boxes = []
         if not self.face_cascade.empty():
             faces = self.face_cascade.detectMultiScale(eq_gray, scaleFactor=1.1, minNeighbors=3, minSize=(40, 40))
             for (fx, fy, fw, fh) in faces:
-                face_boxes.append((fx - 25, fy - 25, fx + fw + 25, fy + fh + int(fh * 0.8)))
+                face_boxes.append((fx - 30, fy - 30, fx + fw + 30, fy + fh + int(fh * 0.9)))
+
+        # 2. Dual-Space Skin Color Masking (HSV + YCrCb)
+        hsv = cv2.cvtColor(image, cv2.COLOR_BGR2HSV)
+        hsv_mask = cv2.inRange(hsv, np.array([0, 20, 50], dtype=np.uint8), np.array([25, 255, 255], dtype=np.uint8))
 
         ycrcb = cv2.cvtColor(image, cv2.COLOR_BGR2YCrCb)
+        ycrcb_mask = cv2.inRange(ycrcb, np.array([0, 135, 80], dtype=np.uint8), np.array([255, 175, 125], dtype=np.uint8))
 
-        # Skin Color Range in YCrCb Space
-        lower_skin = np.array([0, 133, 77], dtype=np.uint8)
-        upper_skin = np.array([255, 173, 127], dtype=np.uint8)
-        skin_mask = cv2.inRange(ycrcb, lower_skin, upper_skin)
+        # Combine HSV + YCrCb masks to reject low-saturation beige walls
+        skin_mask = cv2.bitwise_and(hsv_mask, ycrcb_mask)
+
+        # 3. MOG2 Motion Masking (Static wall/cabinet elimination)
+        fg_mask = self.bg_subtractor.apply(image)
+        fg_mask = cv2.threshold(fg_mask, 200, 255, cv2.THRESH_BINARY)[1]
+
+        # Combine Skin Color with Foreground Motion Mask if motion is active
+        motion_pixel_count = cv2.countNonZero(fg_mask)
+        if motion_pixel_count > 500:
+            combined_mask = cv2.bitwise_and(skin_mask, fg_mask)
+            # Dilate combined mask slightly to preserve hand boundary
+            kernel_sm = cv2.getStructuringElement(cv2.MORPH_ELLIPSE, (5, 5))
+            combined_mask = cv2.dilate(combined_mask, kernel_sm, iterations=2)
+            if cv2.countNonZero(combined_mask) > 800:
+                skin_mask = combined_mask
 
         # Morphological Operations
         kernel = cv2.getStructuringElement(cv2.MORPH_ELLIPSE, (5, 5))
@@ -118,7 +137,7 @@ class SkinContourHandDetector(BaseDetectorEngine):
 
         for cnt in contours:
             area = cv2.contourArea(cnt)
-            if area < 1500 or area > max_allowed_area:  # Filter noise & large background/torso boxes
+            if area < 1200 or area > max_allowed_area:  # Filter noise & large background/torso boxes
                 continue
 
             x, y, w, h = cv2.boundingRect(cnt)
@@ -127,14 +146,13 @@ class SkinContourHandDetector(BaseDetectorEngine):
 
             cx, cy = x + w / 2.0, y + h / 2.0
 
-            # 100% Face Exclusion: Check if contour centroid is inside any face/head/neck box
+            # 100% Face Exclusion
             is_face = False
             for (fx1, fy1, fx2, fy2) in face_boxes:
                 if fx1 <= cx <= fx2 and fy1 <= cy <= fy2:
                     is_face = True
                     break
 
-            # Head/Torso Heuristic
             is_top_head = (
                 y < h_img * 0.40
                 and (w_img * 0.15 < cx < w_img * 0.85)
@@ -144,7 +162,7 @@ class SkinContourHandDetector(BaseDetectorEngine):
             if is_face or is_top_head:
                 continue
 
-            # Check Convexity Defects: Real hands have finger gaps (defect_count > 0 or extended aspect ratio)
+            # Convexity Defects check
             hull = cv2.convexHull(cnt, returnPoints=False)
             defect_count = 0
             if hull is not None and len(hull) >= 3:
@@ -158,10 +176,10 @@ class SkinContourHandDetector(BaseDetectorEngine):
                 except Exception:
                     pass
 
-            # Wall / Plug Rejection: Flat rectangular objects (cabinet, wall plug) have solidity > 0.92 and 0 defects
+            # Wall / Plug / Cabinet Rejection: Flat static rectangular objects have high solidity & 0 defects
             solidity = area / float(cv2.contourArea(cv2.convexHull(cnt)) + 1e-6)
             if solidity > 0.90 and defect_count == 0 and not (0.30 < (w / float(h + 1e-6)) < 0.65):
-                continue  # Reject flat background wall plugs/cabinets
+                continue  # Reject flat static background wall plugs/cabinets
 
             conf = float(min(0.99, max(0.50, solidity * 1.1)))
 
@@ -258,7 +276,7 @@ class YOLOv10ModelLoader(BaseDetectorEngine):
             except Exception as e:
                 logger.error(f"Error during YOLOv10 inference execution: {e}")
 
-        # 2. Run Skin Contour Hand Detector as Backup (with Background Wall & Plug Rejection)
+        # 2. Run Skin Contour Hand Detector as Backup (with Dual-Space HSV+YCrCb and MOG2 Motion Masking)
         skin_hands = self.skin_detector.infer(image)
         if skin_hands:
             return skin_hands
