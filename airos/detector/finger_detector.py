@@ -76,12 +76,21 @@ class FingerDetector:
         if area < 300:
             return analysis
 
+        # Smooth contour slightly to eliminate self-intersections
+        epsilon = 0.005 * cv2.arcLength(max_contour, True)
+        max_contour = cv2.approxPolyDP(max_contour, epsilon, True)
+
         # Calculate Convex Hull & Defects
         hull = cv2.convexHull(max_contour, returnPoints=False)
         if hull is None or len(hull) < 3:
             return analysis
 
-        defects = cv2.convexityDefects(max_contour, hull)
+        defects = None
+        try:
+            defects = cv2.convexityDefects(max_contour, hull)
+        except Exception as e:
+            logger.debug(f"Convexity defects calculation skipped for noisy contour: {e}")
+            defects = None
         defect_count = 0
 
         if defects is not None:
