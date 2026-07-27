@@ -1,6 +1,6 @@
 """
 AirOS++ YOLOv10 Model Loader & Hand Detector Backend Engine
-Handles CPU model loading, skin contour hand detection, and synthetic fallbacks.
+Handles CPU model loading, deep learning hand detection, and skin contour fallbacks.
 """
 
 from abc import ABC, abstractmethod
@@ -68,7 +68,7 @@ class SyntheticHandDetector(BaseDetectorEngine):
 
 class SkinContourHandDetector(BaseDetectorEngine):
     """Real-time OpenCV Skin-Color & Contour Geometry Hand Detector Engine.
-    Excludes top-center face regions and isolates active raised hand bounding boxes.
+    Requires hand contour convexity defect finger gaps to eliminate background wall/plug false positives.
     Runs on CPU in <2ms, 100% offline.
     """
 
@@ -85,7 +85,7 @@ class SkinContourHandDetector(BaseDetectorEngine):
         h_img, w_img = image.shape[:2]
         gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
 
-        # Apply CLAHE contrast equalization so shadowed/backlit faces are detected with 100% precision
+        # Apply CLAHE contrast equalization for face detection
         clahe = cv2.createCLAHE(clipLimit=2.0, tileGridSize=(8, 8))
         eq_gray = clahe.apply(gray)
 
@@ -94,12 +94,11 @@ class SkinContourHandDetector(BaseDetectorEngine):
         if not self.face_cascade.empty():
             faces = self.face_cascade.detectMultiScale(eq_gray, scaleFactor=1.1, minNeighbors=3, minSize=(40, 40))
             for (fx, fy, fw, fh) in faces:
-                # Expand face box down to cover chin/neck/chest region
                 face_boxes.append((fx - 25, fy - 25, fx + fw + 25, fy + fh + int(fh * 0.8)))
 
         ycrcb = cv2.cvtColor(image, cv2.COLOR_BGR2YCrCb)
 
-        # YCrCb Skin Color Range
+        # Skin Color Range in YCrCb Space
         lower_skin = np.array([0, 133, 77], dtype=np.uint8)
         upper_skin = np.array([255, 173, 127], dtype=np.uint8)
         skin_mask = cv2.inRange(ycrcb, lower_skin, upper_skin)
@@ -113,17 +112,17 @@ class SkinContourHandDetector(BaseDetectorEngine):
         contours, _ = cv2.findContours(skin_mask, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
         hand_candidates = []
 
-        max_allowed_area = w_img * h_img * 0.10  # Max 10% of total frame area
-        max_allowed_h = h_img * 0.38  # Max 38% of frame height
-        max_allowed_w = w_img * 0.38  # Max 38% of frame width
+        max_allowed_area = w_img * h_img * 0.12
+        max_allowed_h = h_img * 0.40
+        max_allowed_w = w_img * 0.40
 
         for cnt in contours:
             area = cv2.contourArea(cnt)
-            if area < 1000 or area > max_allowed_area:  # Filter out tiny noise AND large head/torso boxes
+            if area < 1500 or area > max_allowed_area:  # Filter noise & large background/torso boxes
                 continue
 
             x, y, w, h = cv2.boundingRect(cnt)
-            if w > max_allowed_w or h > max_allowed_h:  # Head/torso size rejection
+            if w > max_allowed_w or h > max_allowed_h:
                 continue
 
             cx, cy = x + w / 2.0, y + h / 2.0
@@ -135,20 +134,35 @@ class SkinContourHandDetector(BaseDetectorEngine):
                     is_face = True
                     break
 
-            # Fallback heuristic: Top-center region with head aspect ratio ~ 0.6-1.4
+            # Head/Torso Heuristic
             is_top_head = (
                 y < h_img * 0.40
                 and (w_img * 0.15 < cx < w_img * 0.85)
                 and 0.60 < (w / float(h + 1e-6)) < 1.40
             )
 
-            # Skip face/head contour so ONLY raised HANDS are extracted!
             if is_face or is_top_head:
                 continue
 
-            hull = cv2.convexHull(cnt)
-            hull_area = cv2.contourArea(hull)
-            solidity = area / float(hull_area + 1e-6)
+            # Check Convexity Defects: Real hands have finger gaps (defect_count > 0 or extended aspect ratio)
+            hull = cv2.convexHull(cnt, returnPoints=False)
+            defect_count = 0
+            if hull is not None and len(hull) >= 3:
+                try:
+                    defects = cv2.convexityDefects(cnt, hull)
+                    if defects is not None:
+                        for i in range(defects.shape[0]):
+                            s, e, f, d = defects[i, 0]
+                            if (d / 256.0) > 12.0:
+                                defect_count += 1
+                except Exception:
+                    pass
+
+            # Wall / Plug Rejection: Flat rectangular objects (cabinet, wall plug) have solidity > 0.92 and 0 defects
+            solidity = area / float(cv2.contourArea(cv2.convexHull(cnt)) + 1e-6)
+            if solidity > 0.90 and defect_count == 0 and not (0.30 < (w / float(h + 1e-6)) < 0.65):
+                continue  # Reject flat background wall plugs/cabinets
+
             conf = float(min(0.99, max(0.50, solidity * 1.1)))
 
             hand_candidates.append(
@@ -161,7 +175,6 @@ class SkinContourHandDetector(BaseDetectorEngine):
                 }
             )
 
-        # Sort by area descending (largest active hands first)
         hand_candidates.sort(key=lambda item: item["area"], reverse=True)
         return hand_candidates[:2]
 
@@ -200,11 +213,7 @@ class YOLOv10ModelLoader(BaseDetectorEngine):
                 raise RuntimeError(f"YOLOv10 initialization failed and fallback is disabled: {e}")
 
     def infer(self, image: np.ndarray) -> List[Dict[str, Any]]:
-        # Always run Skin Contour Hand Detector to extract real hand boxes and filter face boxes
-        skin_hands = self.skin_detector.infer(image)
-        if skin_hands:
-            return skin_hands
-
+        # 1. Run YOLOv10 Deep Learning Inference First if Model Loaded
         if self.model is not None:
             try:
                 results = self.model.predict(
@@ -231,7 +240,7 @@ class YOLOv10ModelLoader(BaseDetectorEngine):
 
                         # Filter out face / full-body person box (top center large box)
                         is_face_or_body = (
-                            y1 < h_img * 0.25 and (h > h_img * 0.40 or w > w_img * 0.40)
+                            y1 < h_img * 0.35 and (h > h_img * 0.35 or w > w_img * 0.35)
                         )
                         if is_face_or_body:
                             continue
@@ -249,5 +258,10 @@ class YOLOv10ModelLoader(BaseDetectorEngine):
             except Exception as e:
                 logger.error(f"Error during YOLOv10 inference execution: {e}")
 
-        # If no real hands are detected, return empty list (no ghost detections)
+        # 2. Run Skin Contour Hand Detector as Backup (with Background Wall & Plug Rejection)
+        skin_hands = self.skin_detector.infer(image)
+        if skin_hands:
+            return skin_hands
+
+        # Return empty list if no hands detected
         return []
