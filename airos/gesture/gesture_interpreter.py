@@ -102,17 +102,19 @@ class GestureInterpreter:
         w_img, h_img = frame_dim
         current_time = time.time()
 
-        # 1. Primary Navigation Hand Cursor Positioning (Index Tip or Centroid)
-        cursor_hand = spatial_feats.left_hand if self.config.cursor_hand == "left" else spatial_feats.right_hand
-        if cursor_hand is None:
-            cursor_hand = detections[0]
+        # 1. Primary Navigation Hand Cursor Positioning
+        cursor_hand = detections[0]
+        for det in detections:
+            if self.config.cursor_hand == det.label:
+                cursor_hand = det
+                break
 
         # Analyze finger geometry if frame is available
         finger_analysis = None
         if frame is not None:
             finger_analysis = FingerDetector.analyze(frame, cursor_hand)
 
-        if finger_analysis and finger_analysis.index_tip_norm:
+        if finger_analysis and finger_analysis.index_tip_pt:
             cx, cy = finger_analysis.index_tip_pt
         else:
             cx, cy = cursor_hand.centroid
